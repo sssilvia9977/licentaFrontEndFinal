@@ -1,0 +1,101 @@
+import * as React from "react";
+import {Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback} from 'react-native';
+import {Text, TextInput, View, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
+import {Button, ThemeProvider} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {Input} from 'react-native-elements';
+import colors from "../assets/colors";
+import commonStyle from "../assets/style"
+import {useState} from "react";
+import axios from "axios";
+
+
+export default function ({navigation}) {
+
+    let sessionFromBack = 0;
+    const [username, setUsername] = useState("a");
+    const [password, setPassword] = useState("a");
+
+    const [onFocusStyleUsername, setOnFocusStyleUsername] = useState(true);
+    const [onFocusStylePassword, setOnFocusStylePassword] = useState(true);
+
+
+     function callLogin(navigation){
+        axios.post("http://192.168.43.239:8080/", {username: username, password: password}).then(response => {
+                sessionFromBack = response.data.sessionId;
+           /*     (async () => {
+                    return await AsyncStorage.setItem('session', sessionFromBack, ()=> {});
+                })();
+*/
+                console.log("session:", sessionFromBack);
+                if (sessionFromBack != null ) {
+                    navigation.navigate('MyProfile', {sessionFromBack: sessionFromBack});
+                }
+                else{
+                    alert("nu")
+                }
+
+        });
+    }
+
+
+    return (
+
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+                <TextInput
+                    placeholder="Username"
+                    autoCapitalize='none'
+                    placeholderTextColor='rgba(255, 255, 255, 0.7)'
+                    style={onFocusStyleUsername === true ? commonStyle.inputNoFocus : commonStyle.inputFocus}
+                    onFocus={() => setOnFocusStyleUsername(!onFocusStyleUsername)}
+                    onBlur={() => setOnFocusStyleUsername(!onFocusStyleUsername)}
+                    onChangeText={text => setUsername(text)}
+                    value={username}
+                />
+                <TextInput
+                    secureTextEntry={true}
+                    placeholderTextColor='rgba(255, 255, 255, 0.7)'
+                    placeholder="Password"
+                    autoCapitalize='none'
+                    style={onFocusStylePassword === true ? commonStyle.inputNoFocus : commonStyle.inputFocus}
+                    onFocus={() => setOnFocusStylePassword(!onFocusStylePassword)}
+                    onBlur={() => setOnFocusStylePassword(!onFocusStylePassword)}
+                    onChangeText={text => setPassword(text)}
+                    value={password}
+                />
+
+                <TouchableOpacity
+                    style={commonStyle.commonButton}
+                    onPress={() => callLogin(navigation)}>
+                    <Text style={commonStyle.textButtonCommon}>Log in</Text>
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    style={commonStyle.commonButton}
+                    onPress={() => callLogin(navigation)}>
+                    <Text style={commonStyle.textButtonCommon}>Sign up</Text>
+                </TouchableOpacity>
+
+
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+
+    );
+
+
+}
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+
+    },
+    buttonContainer: {},
+    buttonText: {
+        textAlign: 'center',
+        color: colors.loginScreenTextColor,
+    },
+
+});

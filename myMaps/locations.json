@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Lidl Observator",
+    "address": "Strada Republicii 109, Cluj-Napoca 400489",
+    "coords": {
+      "latitude": 46.757027,
+      "longitude": 23.595271
+    },
+    "image_url": "https://editiadedimineata.ro/wp-content/uploads/2018/05/1-Panda-1170x730.jpg"
+  },
+  {
+    "name": "UTCN Dorobantilor",
+    "address": "Calea Dorobanților 71-73, Cluj-Napoca 400000",
+    "coords": {
+      "latitude": 46.774141,
+      "longitude": 23.607799
+    },
+    "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR62inl34DNJDF5090hsjG-Y9EEhbnmCuAjV1ROSdlug6f-fJRf&s"
+  },
+  {
+    "name": "Facultatea de AC, Baritiu",
+    "address": "Strada George Barițiu 26-28, Cluj-Napoca 400027",
+    "coords": {
+      "latitude": 46.772571,
+      "longitude": 23.585154
+    },
+    "image_url": "https://www.mamisileah.ro/wp-content/uploads/2019/03/P037.jpg"
+  },
+  {
+    "name": "Recotorat UTCN",
+    "address": "Strada Memorandumului 28, Cluj-Napoca 400114",
+    "coords": {
+      "latitude": 46.770117,
+      "longitude": 23.585576
+    },
+    "image_url": "https://www.mamisileah.ro/wp-content/uploads/2019/03/P037.jpg"
+  }
+]
