@@ -11,6 +11,7 @@ import DatePicker from 'react-native-datepicker'
 import {Dropdown} from 'react-native-material-dropdown';
 
 
+
 export default function ({courseName, sessionFromBack, navigation, hideOverlay}) {
 
     /*
@@ -40,7 +41,7 @@ export default function ({courseName, sessionFromBack, navigation, hideOverlay})
     function addAssigAndNavigate(){
         axios.post("http://192.168.43.239:8080/addAssig", {sessionId: sessionFromBack, courseName: courseName,assigTitle:assigTitle , assigDeadline: datePicker, assigDescription: assigDesc})
         hideOverlay(false);
-        navigation.navigate("MyCourseDetailsTemplate", {newIsVisible : false});
+        navigation.navigate("MyCourseDetailsTemplate");
     }
 
 

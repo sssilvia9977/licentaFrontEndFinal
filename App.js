@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+
 import React from 'react';
 import { StyleSheet, Text, View , Dimensions} from 'react-native';
 import AccessMap from "./myMaps/AccessMap";
@@ -11,13 +13,15 @@ import {createDrawerNavigator} from "react-navigation-drawer";
 import MyCourses from "./src/MyProfile/MyCourses";
 import MyCourseDetailsTemplate from "./src/MyProfile/MyCourseDetailsTemplate";
 import AddAssignment from "./src/schedule/AddAssignment";
+import Menu from "./src/Menu";
+
 
 
 export default function App() {
 
-    return (
-        <AppContainer/>
-    );
+  return (
+      <AppContainer/>
+  );
 
 }
 
@@ -35,52 +39,56 @@ const AppDrawerNavigator = createDrawerNavigator({
 
 const AppNavigator = createStackNavigator({
 
-
   Login: {
-    screen: AppDrawerNavigator,
+    screen: LoginScreen,
     navigationOptions:{
       header: null
     }
   },
-    AddAssignment:{
-        screen: AppDrawerNavigator ,
-        navigationOptions:{
-            header: null
-        }
-    },
+  Menu:{
+    screen: Menu,
+    navigationOptions:{
+      header: null
+    }
+  },
+  AddAssignment:{
+    screen: AddAssignment ,
+    navigationOptions:{
+      header: null
+    }
+  },
   MyCourseDetailsTemplate: {
-    screen: AppDrawerNavigator,
+    screen: MyCourseDetailsTemplate,
     navigationOptions:{
       header: null
     }
   },
   MyCourses: {
-    screen: AppDrawerNavigator,
+    screen: MyCourses,
     navigationOptions:{
       header: null
     }
   },
   MyProfile:{
-    screen: AppDrawerNavigator,
+    screen: MyProfile,
     navigationOptions:{
       header: null
     }
   },
 
   Schedule: {
-    screen: AppDrawerNavigator,
+    screen: Schedule,
     navigationOptions: {
       header: null
     }
   },
-
-
-  AccessMap: AppDrawerNavigator,
-  },{
+  AccessMap: AccessMap,
+},{
   headerMode: 'screen'
 });
 
 const AppContainer = createAppContainer(AppNavigator);
+
 
 const styles = StyleSheet.create({
   container: {

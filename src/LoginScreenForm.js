@@ -19,23 +19,24 @@ export default function ({navigation}) {
     const [onFocusStyleUsername, setOnFocusStyleUsername] = useState(true);
     const [onFocusStylePassword, setOnFocusStylePassword] = useState(true);
 
+    const [simulare, setSimulare] = useState(true);
 
      function callLogin(navigation){
         axios.post("http://192.168.43.239:8080/", {username: username, password: password}).then(response => {
                 sessionFromBack = response.data.sessionId;
-           /*     (async () => {
-                    return await AsyncStorage.setItem('session', sessionFromBack, ()=> {});
-                })();
-*/
                 console.log("session:", sessionFromBack);
                 if (sessionFromBack != null ) {
                     navigation.navigate('MyProfile', {sessionFromBack: sessionFromBack});
+                    setSimulare(false);
                 }
                 else{
                     alert("nu")
                 }
 
         });
+       /* if(setSimulare){
+            navigation.navigate('MyProfile', {sessionFromBack: sessionFromBack});
+        }*/
     }
 
 

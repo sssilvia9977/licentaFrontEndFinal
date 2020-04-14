@@ -3,10 +3,11 @@ import {useEffect} from 'react';
 import {StyleSheet, Text, View, ActivityIndicator} from "react-native";
 import colors from "../../assets/colors";
 import commonStyle from "../../assets/style";
-import { Avatar } from "react-native-elements";
+import {Avatar, Overlay} from "react-native-elements";
 import MyProfileForm from "./MyProfileForm";
 import {useState} from "react";
 import axios from "axios";
+import Menu from "../Menu";
 
 
 /*
@@ -21,6 +22,8 @@ export default function ({navigation}) {
     const [username, setUsername] = useState("");
    // console.log("Session from my profile: " + sessionFromBack);
 
+    const [openMenu, setOpenMenu] = useState(false);
+
      useEffect(() =>{
         axios.post("http://192.168.43.239:8080/getUsername", {sessionId: sessionFromBack}).then(response => {
             setUsername(response.data.username);
@@ -33,7 +36,18 @@ export default function ({navigation}) {
         <View style={styles.container}>
             <View style={commonStyle.statusBar}/>
             <View style={commonStyle.navigationBar}>
-                <Text onPress={()=>navigation.openDrawer()}>Menu</Text>
+                <Text onPress={() => setOpenMenu(true)}>Menu</Text>
+                <Overlay isVisible={openMenu}
+                         animationType="fade"
+                         borderRadius={9}
+                         height={370}
+                         containerStyle={{flex: 1, flexDirection:"row",justifyContent: "flex-start"}}
+                         windowBackgroundColor="rgba(214, 162, 232, .9)"
+                         overlayBackgroundColor={colors.backgroudCommon}
+                         onBackdropPress={() => setOpenMenu(false)}>
+
+                    <Menu navigation={navigation} disapear = {setOpenMenu} session={sessionFromBack}/>
+                </Overlay>
             </View>
 
             <View style={styles.avatarView}>

@@ -11,6 +11,8 @@ import ScheduleForm from "./ScheduleCalendarForm";
 import * as DocumentPicker from 'expo-document-picker';
 import TaskSchedule from "./TaskSchedule";
 import TaskAssignment from "./TaskAssignment";
+import {Overlay} from "react-native-elements";
+import Menu from "../Menu";
 
 const {width, height} = Dimensions.get('window');
 
@@ -18,6 +20,7 @@ export default function Schedule({navigation}) {
 
 
     const [onFocusPickAssig, setOnFocusPickAssig] = useState(false);
+    const [openMenu, setOpenMenu] = useState(false);
 
 
     return (
@@ -26,7 +29,18 @@ export default function Schedule({navigation}) {
             <View style={commonStyle.statusBar}/>
 
             <View style={commonStyle.navigationBar}>
-                <Text onPress={() => navigation.openDrawer()}>Menu</Text>
+                <Text onPress={() => setOpenMenu(true)}>Menu</Text>
+                <Overlay isVisible={openMenu}
+                         animationType="fade"
+                         borderRadius={9}
+                         height={370}
+                         containerStyle={{flex: 1, flexDirection:"row",justifyContent: "flex-start"}}
+                         windowBackgroundColor="rgba(214, 162, 232, .9)"
+                         overlayBackgroundColor={colors.backgroudCommon}
+                         onBackdropPress={() => setOpenMenu(false)}>
+
+                    <Menu navigation={navigation} disapear = {setOpenMenu} session={sessionFromBack}/>
+                </Overlay>
             </View>
 
             <ScheduleForm style={styles.calendar} navigation={navigation}/>
