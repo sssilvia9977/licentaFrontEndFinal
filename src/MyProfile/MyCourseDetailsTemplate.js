@@ -61,10 +61,22 @@ export default function MyCoursesTemplate({navigation}) {
             setAssigs(response.data.assigmentDTOS);
             setCourseDetails(response.data);
             setRender(true);
+            console.log(assigs.length);
         })();
 
     }, [navigation]);
 
+    function deleteAssignment(id: number){
+        setAssigs(assigs.filter(assig => assig.id !== id));
+    }
+
+    function updateAssignment(assignment){
+        assigs.forEach(assig => {
+            if(assig.id === assignment.id){
+                assig = assignment;
+            }
+        });
+    }
 
     function activateOverlay() {
         setoverlayVisible(!overlayVisible);
@@ -90,8 +102,6 @@ export default function MyCoursesTemplate({navigation}) {
             </View>
 
             {
-
-
                 render ?
                         <ScrollView>
 
@@ -204,7 +214,10 @@ export default function MyCoursesTemplate({navigation}) {
 
                                         <AddAssignment navigation={navigation} courseName={courseName}
                                                        sessionFromBack={sessionFromBack}
-                                                       hideOverlay={setoverlayVisible}/>
+                                                       hideOverlay={setoverlayVisible}
+                                                       setAssignments={setAssigs}
+                                                        assignments={assigs}
+                                        />
                                     </Overlay>
 
 
@@ -213,6 +226,8 @@ export default function MyCoursesTemplate({navigation}) {
                                 {assigs.map(assig => (
 
                                     <TaskAssignment
+                                        deleteAssignment={deleteAssignment}
+                                        updateAssignment={updateAssignment}
                                         key={assig.id}
                                         assigId={assig.id}
                                         navigation={navigation}
@@ -220,6 +235,8 @@ export default function MyCoursesTemplate({navigation}) {
                                         deadline={assig.dateLine} description={assig.description}
                                         status={assig.status}/>
                                 ))}
+
+
 
 
                             </View>

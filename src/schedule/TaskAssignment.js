@@ -23,15 +23,15 @@ import DatePicker from "react-native-datepicker";
 export default function (props) {
 
     const myColorStatus = props.status;
-    const [myColor, setMyColor] = useState(myColorStatus === "Not Completed" ? false : true);
+    const [myColor, setMyColor] = useState(myColorStatus === "Completed" ? true : false);
     const [openMenu, setOpenMenu] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [heightOver, setHeightOver] = useState(100);
 
-    const [datePicker, setDatePicker] = useState("01-04-2020");
+    const [datePicker, setDatePicker] = useState(props.deadline);
     const [courseChoise, setCourseChoise] = useState([{value: "banana"}]);
-    const [assigTitle, setAssigTitle] = useState("");
-    const [assigDesc, setAssigDesc] = useState("");
+    const [assigTitle, setAssigTitle] = useState(props.courseAbreviere);
+    const [assigDesc, setAssigDesc] = useState(props.description);
 
     /*
     TODO: e.target.value
@@ -59,6 +59,11 @@ export default function (props) {
             assigDeadline: datePicker,
             assigDescription: assigDesc
         });
+        debugger;
+        //TODO add courseName cand ne trebuie
+        let assignment = {title: assigTitle, dateLine: datePicker, description: assigDesc, id: props.assigId};
+        debugger;
+        props.updateAssignment(assignment);
         props.navigation.navigate("MyCourseDetailsTemplate", {newIsVisible : false});
         setOpenMenu(false);
         setOpenUpdate(false);
@@ -71,8 +76,9 @@ export default function (props) {
     }
 
     function deleteAssig() {
-        // console.log("Id of assig to DELETE: " + props.assigId);
+        console.log("Id of assig to DELETE: " + props.assigId);
         setOpenMenu(false);
+        props.deleteAssignment(props.assigId);
         axios.post("http://192.168.43.239:8080/deleteAssig", {
             sessionId: props.sessionFromBack,
             assigId: props.assigId
@@ -107,14 +113,15 @@ export default function (props) {
                                 style={{width: 200, paddingTop: 30, paddingBottom: 20}}
                                 label="Assignment title"
                                 defaultValue={props.courseAbreviere}
-                                onChangeText={text => {text == "" ? setAssigTitle(props.courseAbreviere) : setAssigTitle(text)}}/>
+                                onChangeText={text => setAssigTitle(text === '' ? props.courseAbreviere : text) }/>
+
 
                             <View>
                                 <Text
                                     style={{fontWeight: 'bold', color: "#698a96", paddingTop: 30, fontSize: 15}}> Choose deadline</Text>
                                 <DatePicker
                                     style={{width: 200, paddingTop: 9, paddingBottom: 20}}
-                                    date={props.deadline}
+                                    date={datePicker}
                                     mode="date" placeholder="select date" format="DD-MM-YYYY" minDate="01-09-2018" maxDate="12-06-2029" confirmBtnText="Confirm" cancelBtnText="Cancel"
                                     customStyles={{
                                         dateIcon: {
@@ -136,7 +143,7 @@ export default function (props) {
                                 style={{paddingTop: 30, width: 200,}}
                                 label="Assignment description"
                                 defaultValue={props.description}
-                                onChangeText={text => {text == "" ? setAssigDesc(props.description) : setAssigDesc(text)}}/>
+                                onChangeText={text => setAssigDesc(text === '' ? props.description : text)}/>
 
                             <TouchableOpacity
                                 style={[commonStyle.commonButton, {marginTop: 50}]}

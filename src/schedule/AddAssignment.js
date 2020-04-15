@@ -12,7 +12,7 @@ import {Dropdown} from 'react-native-material-dropdown';
 
 
 
-export default function ({courseName, sessionFromBack, navigation, hideOverlay}) {
+export default function ({courseName, sessionFromBack, navigation, hideOverlay, assignments, setAssignments}) {
 
     /*
     TODO: la setCourseChoise useState , daca vin pe de ecran de curs, pune acel curs ca varianta initiala
@@ -38,8 +38,21 @@ export default function ({courseName, sessionFromBack, navigation, hideOverlay})
         console.log(date);
     }
 
-    function addAssigAndNavigate(){
-        axios.post("http://192.168.43.239:8080/addAssig", {sessionId: sessionFromBack, courseName: courseName,assigTitle:assigTitle , assigDeadline: datePicker, assigDescription: assigDesc})
+    async function addAssigAndNavigate(){
+
+        let id = 0;
+        const response = (await axios.post("http://192.168.43.239:8080/addAssig",
+                {
+                    sessionId: sessionFromBack,
+                    courseName: courseName,
+                    assigTitle: assigTitle,
+                    assigDeadline: datePicker,
+                    assigDescription: assigDesc
+                })).data;
+        debugger;
+        id = response;
+        let assignment = {courseName: courseName,title:assigTitle , dateLine: datePicker, description: assigDesc, id: id};
+        setAssignments([...assignments, assignment]);
         hideOverlay(false);
         navigation.navigate("MyCourseDetailsTemplate");
     }
