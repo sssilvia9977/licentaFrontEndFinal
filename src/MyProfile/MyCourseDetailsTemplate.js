@@ -40,7 +40,7 @@ export default function MyCoursesTemplate({navigation}) {
      */
 
     const [render, setRender] = useState(false);
-    const sessionFromBack = JSON.stringify(navigation.getParam('sessionFromBack', '0')).replace("\\\"", "").replace("\\\"", "");
+    const sessionFromBack =navigation.getParam('sessionFromBack', '0');
     const [courseDetails, setCourseDetails] = useState({});
     const courseNa = JSON.stringify(navigation.getParam('courseName', ""));
     const courseName = courseNa.substring(1, courseNa.length - 1);
@@ -61,7 +61,6 @@ export default function MyCoursesTemplate({navigation}) {
             setAssigs(response.data.assigmentDTOS);
             setCourseDetails(response.data);
             setRender(true);
-            console.log(assigs.length);
         })();
 
     }, [navigation]);
@@ -136,7 +135,8 @@ export default function MyCoursesTemplate({navigation}) {
                                             <View style={{alignSelf: "flex-end"}}>
                                                 <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
                                                               size={25}
-                                                              color={colors.backgroundCommonDark}/>
+                                                              color={colors.backgroundCommonDark}
+                                                              onPress={() => navigation.navigate("GoToCourse", {address:courseDetails.addressLecture, sessionFromBack:sessionFromBack})}/>
                                             </View>
                                         </View>
                                 }

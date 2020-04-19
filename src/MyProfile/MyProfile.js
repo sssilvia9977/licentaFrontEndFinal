@@ -18,7 +18,7 @@ TODO: daca apesi pe imagine, poti schimba imaginea
 export default function ({navigation}) {
 
     const [render, setRender] = useState(false);
-    const sessionFromBack = JSON.stringify(navigation.getParam('sessionFromBack', '0'));
+    const sessionFromBack = navigation.getParam('sessionFromBack', '0');
     const [username, setUsername] = useState("");
    // console.log("Session from my profile: " + sessionFromBack);
 

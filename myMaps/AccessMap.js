@@ -85,7 +85,7 @@ export default class AccessMap extends React.Component {
         } catch (e) {
             console.log('Error', e)
         }
-    }
+   }
 
     onMarkerPress = location => () => {
         const { coords: { latitude, longitude } } = location

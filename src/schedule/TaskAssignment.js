@@ -33,10 +33,6 @@ export default function (props) {
     const [assigTitle, setAssigTitle] = useState(props.courseAbreviere);
     const [assigDesc, setAssigDesc] = useState(props.description);
 
-    /*
-    TODO: e.target.value
-     */
-
 
     function changeAssigStatus() {
         setMyColor(!myColor);
@@ -46,7 +42,6 @@ export default function (props) {
             assigId: props.assigId
         })
     }
-
 
 
     function updateAssigAndNavigate() {
@@ -59,10 +54,8 @@ export default function (props) {
             assigDeadline: datePicker,
             assigDescription: assigDesc
         });
-        debugger;
         //TODO add courseName cand ne trebuie
         let assignment = {title: assigTitle, dateLine: datePicker, description: assigDesc, id: props.assigId};
-        debugger;
         props.updateAssignment(assignment);
         props.navigation.navigate("MyCourseDetailsTemplate", {newIsVisible : false});
         setOpenMenu(false);
@@ -76,7 +69,7 @@ export default function (props) {
     }
 
     function deleteAssig() {
-        console.log("Id of assig to DELETE: " + props.assigId);
+      //  console.log("Id of assig to DELETE: " + props.assigId);
         setOpenMenu(false);
         props.deleteAssignment(props.assigId);
         axios.post("http://192.168.43.239:8080/deleteAssig", {
@@ -93,7 +86,6 @@ export default function (props) {
 
     return (
         <View>
-
             <Overlay isVisible={openMenu}
                      borderRadius={9}
                      height={heightOver}

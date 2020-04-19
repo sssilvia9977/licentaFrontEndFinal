@@ -13,14 +13,67 @@ import TaskSchedule from "./TaskSchedule";
 import TaskAssignment from "./TaskAssignment";
 import {Overlay} from "react-native-elements";
 import Menu from "../Menu";
+import {useEffect} from "react";
 
 const {width, height} = Dimensions.get('window');
 
 export default function Schedule({navigation}) {
 
+    const sessionFromBack = navigation.getParam('sessionFromBack', '0');
 
     const [onFocusPickAssig, setOnFocusPickAssig] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
+
+    const [scheduleDate, setScheduleDate] = useState();
+    const [scheduleDay, setScheduleDay] = useState(new Date().getDay());   // 0 e duminica
+
+    const [oraLuni, setOraLuni] = useState([]);
+    const [oraMarti, setOraMarti] = useState([]);
+    const [oraMiercuri, setOraMiercuri] = useState([]);
+    const [oraJoi, setOraJoi] = useState([]);
+    const [oraVineri, setOraVineri] = useState([]);
+
+    const [structInCalendar, setStructInCalendar] = useState();
+
+
+
+    useEffect(() => {
+
+        (async () => {
+           /*  const responseAssig = await axios.post("http://192.168.43.239:8080/getAssigsUntilDay", {
+                  sessionId: sessionFromBack,
+                  scheduleDate: scheduleDate,
+             });*/
+
+//---------------------------------------------------------------------------------------------------------
+            const responseOrar = await axios.post("http://192.168.43.239:8080/getSchedule", {
+                sessionId: sessionFromBack
+            });
+
+            setOraLuni([]);
+            setOraMarti([]);
+            setOraMiercuri([]);
+            setOraJoi([]);
+            setOraVineri([]);
+
+            responseOrar.data.forEach(ora => {
+                if(ora.day == "Monday")         setOraLuni(oraLuni => [...oraLuni, ora]);
+                else if(ora.day == "Tuesday")   setOraMarti(oraMarti => [...oraMarti, ora]);
+                else if(ora.day == "Wednesday") setOraMiercuri(oraMiercuri => [...oraMiercuri, ora]);
+                else if(ora.day == "Thursday")  setOraJoi(oraJoi => [...oraJoi, ora]);
+                else if(ora.day == "Friday")    setOraVineri(oraVineri => [...oraVineri, ora]);
+            });
+//---------------------------------------------------------------------------------------------------------
+
+
+
+
+
+        })();
+    }, [navigation]);
+
+    //TODO: 1 am sa colorez in functie de perioada  2  apoi am sa iau din orar pt luni marti etc 3 sa iau assig pt acele date
+    //afisez assigurile mereu pana la deadline ul lor
 
 
     return (
@@ -43,7 +96,7 @@ export default function Schedule({navigation}) {
                 </Overlay>
             </View>
 
-            <ScheduleForm style={styles.calendar} navigation={navigation}/>
+            <ScheduleForm  style={styles.calendar} navigation={navigation} sendScheduleDay={setScheduleDay} sendScheduleDate={setScheduleDate} sessionFromBack={sessionFromBack}/>
 
             <ScrollView>
                 <View style={styles.aranjare}>
@@ -59,29 +112,58 @@ export default function Schedule({navigation}) {
                             <Text style={onFocusPickAssig === true ? styles.textStyleOnFocus : styles.textStyleOnBlur}
                             >Assignments</Text>
                         </TouchableOpacity>
-                    </View>
 
 
-                    {onFocusPickAssig === false ? <TaskSchedule courseAbreviere="OS" courseType="Lec" hourStart="08:00" hourEnd="10:00" classRoom="F"
-                        address="Strada George Baritiu"/> :   <TaskAssignment courseAbreviere="DB" deadline="Marti"   taskName="Make some views"/>
-                    }
+                </View>
 
-                    {onFocusPickAssig === false ? <TaskSchedule courseAbreviere="PSN" courseType="Lab" hourStart="12:00" hourEnd="14:00"
-                                                                classRoom="205 lab" address="Strada Observator"/>:  <TaskAssignment courseAbreviere="OS" deadline="Vineri"   taskName="Learn Threads"/>
-                    }
+                        {onFocusPickAssig == false ?
 
-                    {onFocusPickAssig === false ?  <TaskSchedule courseAbreviere="OS" courseType="Sem" hourStart="14:00" hourEnd="16:00"
-                                                                 classRoom="101" address="Strada Dorobantilor 72"/>:
-                        <TaskAssignment courseAbreviere="OS" deadline="Vineri"   taskName="Learn Threads"/>
-                    }
+                            (scheduleDay == 1  ?
+                                    oraLuni.map((ora, index) =>
+                                        <TaskSchedule courseAbreviere={ora.courseAbreviere} courseType={ora.courseType}
+                                                      hourStart={ora.hourStart} hourEnd={ora.hourEnd} classRoom={ora.courseClassRoom}
+                                                      address={ora.courseAddress} detailsAddress = {ora.courseAddressDetails} key = {index}/> )
 
-                    {onFocusPickAssig === false ?   <TaskSchedule courseAbreviere="OS" courseType="Lec" hourStart="08:00" hourEnd="10:00" classRoom="F"
-                                                                  address="Strada George Baritiu"/> :   <TaskAssignment courseAbreviere="DB" deadline="Marti"   taskName="Make some views"/>
-                    }
+                                    :
 
+                                    (scheduleDay == 2  ?
+                                            oraMarti.map((ora, index) =>
+                                                <TaskSchedule courseAbreviere={ora.courseAbreviere} courseType={ora.courseType}
+                                                              hourStart={ora.hourStart} hourEnd={ora.hourEnd} classRoom={ora.courseClassRoom}
+                                                              address={ora.courseAddress} detailsAddress = {ora.courseAddressDetails}  key = {index} /> )
+                                            :
+                                            (scheduleDay == 3  ?
+                                                    oraMiercuri.map((ora, index) =>
+                                                        <TaskSchedule courseAbreviere={ora.courseAbreviere} courseType={ora.courseType}
+                                                                      hourStart={ora.hourStart} hourEnd={ora.hourEnd} classRoom={ora.courseClassRoom}
+                                                                      address={ora.courseAddress} detailsAddress = {ora.courseAddressDetails}  key = {index} /> )
+                                                    :
+                                                    (scheduleDay == 4  ?
+                                                            oraJoi.map((ora, index) =>
+                                                                <TaskSchedule courseAbreviere={ora.courseAbreviere} courseType={ora.courseType}
+                                                                              hourStart={ora.hourStart} hourEnd={ora.hourEnd} classRoom={ora.courseClassRoom}
+                                                                              address={ora.courseAddress} detailsAddress = {ora.courseAddressDetails}  key = {index} /> )
+                                                            :
 
+                                                            (scheduleDay == 5  ?
+                                                                    oraVineri.map((ora, index) =>
+                                                                        <TaskSchedule courseAbreviere={ora.courseAbreviere} courseType={ora.courseType}
+                                                                                      hourStart={ora.hourStart} hourEnd={ora.hourEnd} classRoom={ora.courseClassRoom}
+                                                                                      address={ora.courseAddress} detailsAddress = {ora.courseAddressDetails}  key = {index}/> )
 
+                                                                    :
+                                                                    <View></View>
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
 
+                            :
+
+                            <TaskAssignment courseAbreviere="DB" deadline="Marti"   taskName="Make some views"/>
+
+                        }
 
                 </View>
             </ScrollView>

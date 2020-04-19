@@ -14,6 +14,7 @@ import MyCourses from "./src/MyProfile/MyCourses";
 import MyCourseDetailsTemplate from "./src/MyProfile/MyCourseDetailsTemplate";
 import AddAssignment from "./src/schedule/AddAssignment";
 import Menu from "./src/Menu";
+import GoToCourse from "./myMaps/GoToCourse";
 
 
 
@@ -47,6 +48,12 @@ const AppNavigator = createStackNavigator({
   },
   Menu:{
     screen: Menu,
+    navigationOptions:{
+      header: null
+    }
+  },
+  GoToCourse:{
+    screen: GoToCourse,
     navigationOptions:{
       header: null
     }

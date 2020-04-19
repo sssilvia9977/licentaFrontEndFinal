@@ -18,28 +18,17 @@ TODO: daca apesi pe imagine, poti schimba imaginea
 
 export default function ({navigation}) {
 
-    const sessionFromBack = JSON.stringify(navigation.getParam('sessionFromBack', '0')).replace("\\\"", "").replace("\\\"", "");
+    const sessionFromBack = navigation.getParam('sessionFromBack', '0');
     const [courses, setCourses] = useState([]);
 
     const [openMenu, setOpenMenu] = useState(false);
-
-    function handleBackButtonClick() {
-        navigation.goBack();
-        return true;
-    }
-
-
 
    useEffect(() =>{
      //  console.log("my courses session id: " + sessionFromBack);
        axios.post("http://192.168.43.239:8080/getCourses", {sessionId:sessionFromBack}).then(response => {
            setCourses(response.data);
-           
    });
    },[]);
-
-
-
 
 
     return(
