@@ -27,6 +27,7 @@ export default function ({courseName, sessionFromBack, navigation, hideOverlay, 
     const [assigDesc, setAssigDesc] = useState("");
 
 
+
     useEffect(() => {
         axios.post("http://192.168.43.239:8080/getCourses", {sessionId: sessionFromBack}).then(response => {
             setCourseChoise(response.data.name);
@@ -49,12 +50,13 @@ export default function ({courseName, sessionFromBack, navigation, hideOverlay, 
                     assigDeadline: datePicker,
                     assigDescription: assigDesc
                 })).data;
-        debugger;
         id = response;
-        let assignment = {courseName: courseName,title:assigTitle , dateLine: datePicker, description: assigDesc, id: id};
-        setAssignments([...assignments, assignment]);
+        let assignment = {courseName: courseName, title:assigTitle , dateLine: datePicker, description: assigDesc, id: id};
+        setAssignments([...assignments, assignment].sort(function (a, b) {
+            return ('' + a.dateLine).localeCompare(b.dateLine);
+        }));
         hideOverlay(false);
-        navigation.navigate("MyCourseDetailsTemplate");
+        //navigation.navigate("MyCourseDetailsTemplate");
     }
 
 

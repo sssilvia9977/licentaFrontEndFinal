@@ -30,9 +30,7 @@ import {useCallback} from "react";
 import Menu from "../Menu";
 
 
-
 export default function MyCoursesTemplate({navigation}) {
-
 
 
     /*
@@ -40,7 +38,7 @@ export default function MyCoursesTemplate({navigation}) {
      */
 
     const [render, setRender] = useState(false);
-    const sessionFromBack =navigation.getParam('sessionFromBack', '0');
+    const sessionFromBack = navigation.getParam('sessionFromBack', '0');
     const [courseDetails, setCourseDetails] = useState({});
     const courseNa = JSON.stringify(navigation.getParam('courseName', ""));
     const courseName = courseNa.substring(1, courseNa.length - 1);
@@ -51,6 +49,19 @@ export default function MyCoursesTemplate({navigation}) {
     const [assigs, setAssigs] = useState([]);
     const [openMenu, setOpenMenu] = useState(false);
 
+    function splitDate(a) {
+        return  a.dateLine.substring(6,10) + "-" + a.dateLine.substring(3,5) + "-" + a.dateLine.substring(0,2);
+    }
+
+    function ordonareDupaDate(assigs){
+        let sortate = assigs.sort(function (a, b) {
+            let newA = splitDate(a);
+            let newB = splitDate(b);
+            return ('' + newA).localeCompare(newB);
+        });
+        return sortate;
+    }
+
 
     useEffect(() => {
         (async () => {
@@ -58,23 +69,24 @@ export default function MyCoursesTemplate({navigation}) {
                 sessionId: sessionFromBack,
                 courseName: courseName
             });
-            setAssigs(response.data.assigmentDTOS);
+            setAssigs(ordonareDupaDate(response.data.assigmentDTOS));
             setCourseDetails(response.data);
             setRender(true);
         })();
 
     }, [navigation]);
 
-    function deleteAssignment(id: number){
-        setAssigs(assigs.filter(assig => assig.id !== id));
+    function deleteAssignment(id: number) {
+        setAssigs(assigs.filter(assig => assig.id !== id))
     }
 
-    function updateAssignment(assignment){
+    function updateAssignment(assignment) {
         assigs.forEach(assig => {
-            if(assig.id === assignment.id){
+            if (assig.id === assignment.id) {
                 assig = assignment;
             }
         });
+        setAssigs(ordonareDupaDate(assigs));
     }
 
     function activateOverlay() {
@@ -91,156 +103,158 @@ export default function MyCoursesTemplate({navigation}) {
                          animationType="fade"
                          borderRadius={9}
                          height={370}
-                         containerStyle={{flex: 1, flexDirection:"row",justifyContent: "flex-start"}}
+                         containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
                          windowBackgroundColor="rgba(214, 162, 232, .9)"
                          overlayBackgroundColor={colors.backgroudCommon}
                          onBackdropPress={() => setOpenMenu(false)}>
 
-                    <Menu navigation={navigation} disapear = {setOpenMenu} session={sessionFromBack}/>
+                    <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
                 </Overlay>
             </View>
 
             {
                 render ?
-                        <ScrollView>
+                    <ScrollView>
 
-                            <View style={{paddingBottom: 70,}}>
+                        <View style={{paddingBottom: 70,}}>
 
-                                <View style={styles.avatarView}>
-                                    <Text style={{
-                                        color: colors.backgroundCommonDark,
-                                        paddingBottom: 10,
-                                        fontSize: 20,
-                                        fontWeight: 'bold',
-                                        fontFamily: "serif",
-                                    }}>{courseName}</Text>
-                                </View>
+                            <View style={styles.avatarView}>
+                                <Text style={{
+                                    color: colors.backgroundCommonDark,
+                                    paddingBottom: 10,
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    fontFamily: "serif",
+                                }}>{courseName}</Text>
+                            </View>
 
-                                {
-                                    courseDetails.classRoomLecture == "" ?
-                                        <View style={styles.container}><Text style={commonStyle.actualText}>No
-                                            lecture</Text></View> :
-                                        <View style={styles.container}>
-                                            <View style={styles.myView}>
-                                                <Text style={commonStyle.actualText}>Lecture: </Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.professorLecture}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.professorLectureEmail}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.classRoomLecture}, {courseDetails.addressLecture}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.observationLecture}</Text>
-                                            </View>
-                                            <View style={{alignSelf: "flex-end"}}>
-                                                <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
-                                                              size={25}
-                                                              color={colors.backgroundCommonDark}
-                                                              onPress={() => navigation.navigate("GoToCourse", {address:courseDetails.addressLecture, sessionFromBack:sessionFromBack})}/>
-                                            </View>
+                            {
+                                courseDetails.classRoomLecture == "" ?
+                                    <View style={styles.container}><Text style={commonStyle.actualText}>No
+                                        lecture</Text></View> :
+                                    <View style={styles.container}>
+                                        <View style={styles.myView}>
+                                            <Text style={commonStyle.actualText}>Lecture: </Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorLecture}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorLectureEmail}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.classRoomLecture}, {courseDetails.addressLecture}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.observationLecture}</Text>
                                         </View>
-                                }
-
-
-                                {
-                                    courseDetails.classRoomLab == "" ?
-                                        <View style={styles.container}><Text style={commonStyle.actualText}>No
-                                            Laboratory</Text></View> :
-                                        <View style={styles.container}>
-                                            <View style={styles.myView}>
-                                                <Text style={commonStyle.actualText}>Laboratory: </Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.professorLab}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.professorLabEmail}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.classRoomLab}, {courseDetails.addressLab}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.observationLab}</Text>
-                                            </View>
-                                            <View style={{alignSelf: "flex-end"}}>
-                                                <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
-                                                              size={25}
-                                                              color={colors.backgroundCommonDark}/>
-                                            </View>
+                                        <View style={{alignSelf: "flex-end"}}>
+                                            <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
+                                                          size={25}
+                                                          color={colors.backgroundCommonDark}
+                                                          onPress={() => navigation.navigate("GoToCourse", {
+                                                              address: courseDetails.addressLecture,
+                                                              sessionFromBack: sessionFromBack
+                                                          })}/>
                                         </View>
-                                }
+                                    </View>
+                            }
 
-                                {
-                                    courseDetails.classRoomSeminary == "" ?
-                                        <View style={styles.container}><Text style={commonStyle.actualText}>No
-                                            Seminary</Text></View> :
-                                        <View style={styles.container}>
-                                            <View style={styles.myView}>
-                                                <Text style={commonStyle.actualText}>Seminary: </Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.professorSeminary}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.professorSeminaryEmail}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.classRoomSeminary}, {courseDetails.addressSeminary}</Text>
-                                                <Text
-                                                    style={commonStyle.actualSmallText}>{courseDetails.observationSeminary}</Text>
-                                            </View>
-                                            <View style={{alignSelf: "flex-end"}}>
-                                                <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
-                                                              size={25}
-                                                              color={colors.backgroundCommonDark}/>
-                                            </View>
+
+                            {
+                                courseDetails.classRoomLab == "" ?
+                                    <View style={styles.container}><Text style={commonStyle.actualText}>No
+                                        Laboratory</Text></View> :
+                                    <View style={styles.container}>
+                                        <View style={styles.myView}>
+                                            <Text style={commonStyle.actualText}>Laboratory: </Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorLab}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorLabEmail}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.classRoomLab}, {courseDetails.addressLab}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.observationLab}</Text>
                                         </View>
-                                }
+                                        <View style={{alignSelf: "flex-end"}}>
+                                            <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
+                                                          size={25}
+                                                          color={colors.backgroundCommonDark}/>
+                                        </View>
+                                    </View>
+                            }
+
+                            {
+                                courseDetails.classRoomSeminary == "" ?
+                                    <View style={styles.container}><Text style={commonStyle.actualText}>No
+                                        Seminary</Text></View> :
+                                    <View style={styles.container}>
+                                        <View style={styles.myView}>
+                                            <Text style={commonStyle.actualText}>Seminary: </Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorSeminary}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorSeminaryEmail}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.classRoomSeminary}, {courseDetails.addressSeminary}</Text>
+                                            <Text
+                                                style={commonStyle.actualSmallText}>{courseDetails.observationSeminary}</Text>
+                                        </View>
+                                        <View style={{alignSelf: "flex-end"}}>
+                                            <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
+                                                          size={25}
+                                                          color={colors.backgroundCommonDark}/>
+                                        </View>
+                                    </View>
+                            }
 
 
-                                <Divider style={{backgroundColor: colors.myPink, height: 2, marginTop: 10}}/>
+                            <Divider style={{backgroundColor: colors.myPink, height: 2, marginTop: 10}}/>
 
 
-                                <View style={styles.container}>
-                                    <Text style={commonStyle.actualText}>Assignments:</Text>
+                            <View style={styles.container}>
+                                <Text style={commonStyle.actualText}>Assignments:</Text>
 
-                                    <FontAwesome5 style={{paddingLeft: 10, paddingRight: 10, paddingTop: 5}} name="plus"
-                                                  size={30}
-                                                  color={colors.myPink}
-                                                  onPress={() => activateOverlay()}
+                                <FontAwesome5 style={{paddingLeft: 10, paddingRight: 10, paddingTop: 5}} name="plus"
+                                              size={30}
+                                              color={colors.myPink}
+                                              onPress={() => activateOverlay()}
+                                />
+
+
+                                <Overlay isVisible={overlayVisible}
+                                         borderRadius={9}
+                                         height={370}
+                                         containerStyle={{flex: 1, justifyContent: "flex-start"}}
+                                         windowBackgroundColor="rgba(214, 162, 232, .9)"
+                                         overlayBackgroundColor={colors.backgroudCommon}
+                                         onBackdropPress={() => setoverlayVisible(false)}>
+
+                                    <AddAssignment navigation={navigation} courseName={courseName}
+                                                   sessionFromBack={sessionFromBack}
+                                                   hideOverlay={setoverlayVisible}
+                                                   setAssignments={setAssigs}
+                                                   assignments={assigs}
                                     />
-
-
-                                    <Overlay isVisible={overlayVisible}
-                                             borderRadius={9}
-                                             height={370}
-                                             containerStyle={{flex: 1, justifyContent: "flex-start"}}
-                                             windowBackgroundColor="rgba(214, 162, 232, .9)"
-                                             overlayBackgroundColor={colors.backgroudCommon}
-                                             onBackdropPress={() => setoverlayVisible(false)}>
-
-                                        <AddAssignment navigation={navigation} courseName={courseName}
-                                                       sessionFromBack={sessionFromBack}
-                                                       hideOverlay={setoverlayVisible}
-                                                       setAssignments={setAssigs}
-                                                        assignments={assigs}
-                                        />
-                                    </Overlay>
-
-
-                                </View>
-
-                                {assigs.map(assig => (
-
-                                    <TaskAssignment
-                                        deleteAssignment={deleteAssignment}
-                                        updateAssignment={updateAssignment}
-                                        key={assig.id}
-                                        assigId={assig.id}
-                                        navigation={navigation}
-                                        sessionFromBack={sessionFromBack} courseAbreviere={assig.title}
-                                        deadline={assig.dateLine} description={assig.description}
-                                        status={assig.status}/>
-                                ))}
-
-
+                                </Overlay>
 
 
                             </View>
-                        </ScrollView>
+
+                            {assigs.map(assig => (
+
+                                <TaskAssignment
+                                    deleteAssignment={deleteAssignment}
+                                    updateAssignment={updateAssignment}
+                                    key={assig.id}
+                                    assigId={assig.id}
+                                    navigation={navigation}
+                                    sessionFromBack={sessionFromBack} courseAbreviere={assig.title}
+                                    deadline={assig.dateLine} description={assig.description}
+                                    status={assig.status}
+                                    openOverlay="true"/>
+                            ))}
+
+
+                        </View>
+                    </ScrollView>
 
                     :
                     <ActivityIndicator size="large" color="#0000ff"/>

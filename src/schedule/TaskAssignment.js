@@ -22,8 +22,8 @@ import DatePicker from "react-native-datepicker";
 
 export default function (props) {
 
-    const myColorStatus = props.status;
-    const [myColor, setMyColor] = useState(myColorStatus === "Completed" ? true : false);
+    //const myColorStatus = props.status;
+    const [myColor, setMyColor] = useState(props.status === "COMPLETED" );
     const [openMenu, setOpenMenu] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [heightOver, setHeightOver] = useState(100);
@@ -33,6 +33,7 @@ export default function (props) {
     const [assigTitle, setAssigTitle] = useState(props.courseAbreviere);
     const [assigDesc, setAssigDesc] = useState(props.description);
 
+    const [openOverlayFromSchedule, setOpenOverlayFromSchedule]= useState(props.openOverlay.length === 4);
 
     function changeAssigStatus() {
         setMyColor(!myColor);
@@ -42,7 +43,6 @@ export default function (props) {
             assigId: props.assigId
         })
     }
-
 
     function updateAssigAndNavigate() {
         // console.log("Id of assig longed presses: " + props.assigId);
@@ -86,7 +86,7 @@ export default function (props) {
 
     return (
         <View>
-            <Overlay isVisible={openMenu}
+            <Overlay isVisible={openOverlayFromSchedule ? openMenu : false}
                      borderRadius={9}
                      height={heightOver}
                      containerStyle={{flex: 1, justifyContent: "space-between"}}
@@ -146,8 +146,8 @@ export default function (props) {
 
                         </View>
 
-
                         :
+
                         <View>
                             <TouchableOpacity
                                 onPress={() => updateAssig()}>
@@ -183,8 +183,6 @@ export default function (props) {
                                     <Text style={commonStyle.actualSmallText}>{props.description}</Text>
                                 </View>
                         }
-
-
                     </View>
 
                     <View style={{flex: 1, flexDirection: "row-reverse"}}>

@@ -11,85 +11,118 @@ import {useState} from "react";
 import {useEffect} from "react";
 import axios from "axios";
 
-export default function ({navigation, sendScheduleDate, sendScheduleDay, sessionFromBack}) {
+export default function ({navigation, sendScheduleDate, sendScheduleDay, sessionFromBack, sendScheduleMonth, sendScheduleYear}) {
 
-    const laboratory = {key:'laboratory', color: 'red', selectedDotColor: 'blue'};
-    const lecture = {key:'lecture', color: 'blue', selectedDotColor: 'blue'};
-    const seminary = {key:'seminary', color: 'green'};
+    const laboratory = {key: 'laboratory', color: 'red', selectedDotColor: 'blue'};
+    const lecture = {key: 'lecture', color: 'blue', selectedDotColor: 'blue'};
+    const seminary = {key: 'seminary', color: 'green'};
 
-
-
+    const [initialMarkedDates, setInitialMarkedDates] = useState({});
     const [markedDates, setMarkedDates] = useState({});
 
-    function structInCalendar(responseStructura){
+    function structInCalendar(responseStructura) {
         let struct = responseStructura.data;  //am luat toate perioadele si pot sa fac .cescriebackend
         let calendarPeriod = {};
+
+        let year = new Date().getFullYear();
+        let month = new Date().getMonth() + 1;
+        let daySelected = new Date().getDate();
+        let currentDay = year + '-' + (month < 10 ? '0' + month : month) + '-' + (daySelected < 10 ? '0' + daySelected : daySelected);
+
         struct.forEach(str => {
 
-            let end = new Date(str.periodEnd);
+            let end = new Date(str.periodEnd.split("T")[0]);
             let type = str.schoolPeriodType;
 
-            for(let start = new Date(str.periodStart); start <= end; start.setDate(start.getDate() + 1)){
+            let start = new Date(str.periodStart.split("T")[0]);
+            for (; start <= end; start.setDate(start.getDate() + 1)) {
                 let day = start.getDate();
                 let month = start.getMonth() + 1;
                 let year = start.getFullYear();
-                calendarPeriod[year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)] = {
+                let structDay = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day)
+
+                calendarPeriod[structDay] = {
                     customStyles: {
-                        selectedDayBackgroundColor: 'blue',
                         container: {
                             backgroundColor: str.schoolPeriodType === 'EXAM' ? 'red' : 'white',
                             elevation: str.schoolPeriodType === "HOLIDAY" ? 2 : 0
                         },
                         text: {
-                            color: 'black',
-                            fontWeight: 'bold'
+                            color: currentDay === structDay? 'blue' : 'black'
                         }
                     }
                 };
+
             }
+
+
         });
         setMarkedDates(calendarPeriod);
+        setInitialMarkedDates(calendarPeriod);
+
     }
 
     useEffect(() => {
         (async () => {
-           const responseStructura = await axios.post("http://192.168.43.239:8080/getStructAnUniv", {
-               sessionId: sessionFromBack,
-           });
-           structInCalendar(responseStructura);
-
-         /*  const responseTask = await axios.post("http://192.168.43.239:8080/getTaskForDay", {
+            const responseStructura = await axios.post("http://192.168.43.239:8080/getStructAnUniv", {
                 sessionId: sessionFromBack,
-                scheduleDay: scheduleDay,
-           });*/
+            });
+            structInCalendar(responseStructura);
+
         })();
     }, [navigation]);
 
 
     function sendDayAndDate(day) {
-        console.log('selected day', day);
+        //   console.log('selected day', day);
         sendScheduleDay(new Date(day.dateString).getDay());
         sendScheduleDate(new Date(day.dateString).getDate());
+        sendScheduleMonth(new Date(day.dateString).getMonth());
+        sendScheduleYear(new Date(day.dateString).getFullYear());
+
+        let year = new Date(day.dateString).getFullYear();
+        let month = new Date(day.dateString).getMonth() + 1;
+        let daySelected = new Date(day.dateString).getDate();
+        let selectedDay = year + '-' + (month < 10 ? '0' + month : month) + '-' + (daySelected < 10 ? '0' + daySelected : daySelected);
+
+        setMarkedDates({
+            ...initialMarkedDates, [selectedDay]: {
+                customStyles: {
+                    container: {
+                        backgroundColor: colors.loginScreenBackgroundColor,
+                    },
+                    text: {
+                        color: 'white',
+                        fontWeight: 'bold'
+                    }
+                }
+            }
+        });
+
     }
 
 
-    return(
+    return (
 
         <View style={styles.container}>
 
-            <View >
-                <CalendarList style={styles.calendar}
+            <View>
 
+                <CalendarList style={styles.calendar}
                               firstDay={1}
                     // Callback which gets executed when visible months change in scroll view. Default = undefined
-                              onVisibleMonthsChange={(months) => {console.log('now these months are visible', months);}}
+                              onVisibleMonthsChange={(months) => {
+                                  console.log('now these months are visible', months);
+                              }}
                               pastScrollRange={22}
                               futureScrollRange={12}
                     // Enable or disable scrolling of calendar list
                               scrollEnabled={true}
                     // Enable or disable vertical scroll indicator. Default = false
                               showScrollIndicator={false}
-                              onDayPress={(day) => sendDayAndDate(day)}
+                              onDayPress={(day) => {
+                                  sendDayAndDate(day)
+                              }}
                     // Enable horizontal scrolling, default = false
                               horizontal={true}
                     // Enable paging on horizontal, default = false
@@ -104,7 +137,6 @@ export default function ({navigation, sendScheduleDate, sendScheduleDay, session
 
     );
 }
-
 
 
 const styles = StyleSheet.create({
