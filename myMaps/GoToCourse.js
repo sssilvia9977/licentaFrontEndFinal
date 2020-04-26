@@ -12,6 +12,7 @@ import {Marker} from "react-native-maps";
 import {useEffect} from "react";
 import * as Location from 'expo-location';
 import {FontAwesome5} from "@expo/vector-icons";
+import axios from 'axios';
 
 
 export default function ({navigation}) {
@@ -31,10 +32,10 @@ export default function ({navigation}) {
 
     async function getDirections(startLoc, desLoc) {
         try {
-            //aici am ceva eroare la respJson
-            const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${desLoc}&key=AIzaSyCqf1Djekazim8MTvftAXHifffsQ4Q_VYY`)
-            const respJson = await resp.json();
-            const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+
+            const resp = await axios.get(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc.latitude},${startLoc.longitude}&destination=${desLoc}&key=AIzaSyCqf1Djekazim8MTvftAXHifffsQ4Q_VYY`)
+
+            const points = Polyline.decode(resp.data.routes[0].overview_polyline.points);
             const coords = points.map(point => {
                 return {
                     latitude: point[0],
@@ -63,11 +64,11 @@ export default function ({navigation}) {
                         longitude: currentLocation.coords.longitude,
                         title: ''
                     });
-                    getDirections(location, destination);
+                    getDirections({ latitude: currentLocation.coords.latitude,
+                        longitude: currentLocation.coords.longitude,}, destination);
                 }
             }
         })();
-
 
     }, []);
 
@@ -99,7 +100,7 @@ export default function ({navigation}) {
                     :
 
                     <View
-                        style={styles.container}>
+                        style={styles.containerMaps}>
                         <MapView
                             showsUserLocation
                             region={{
@@ -110,6 +111,14 @@ export default function ({navigation}) {
                             }}
                             style={{flex: 1}}
                         >
+
+                            <MapView.Polyline
+                                strokeWidth={2}
+                                strokeColor="red"
+                                coordinates={destCoords}
+                            />
+
+
                         </MapView>
 
                         <View
@@ -180,6 +189,12 @@ export default function ({navigation}) {
 //<Marker coordinate={location}/>
 
 const styles = StyleSheet.create({
+
+    containerMaps:{
+        flex: 1,
+        justifyContent: 'space-between',
+        flexDirection: "row",
+    },
     container: {
         flex: 1,
         justifyContent: 'space-between',

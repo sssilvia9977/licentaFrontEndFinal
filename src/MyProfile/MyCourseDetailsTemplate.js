@@ -176,7 +176,11 @@ export default function MyCoursesTemplate({navigation}) {
                                         <View style={{alignSelf: "flex-end"}}>
                                             <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
                                                           size={25}
-                                                          color={colors.backgroundCommonDark}/>
+                                                          color={colors.backgroundCommonDark}
+                                                          onPress={() => navigation.navigate("GoToCourse", {
+                                                              address: courseDetails.addressLab,
+                                                              sessionFromBack: sessionFromBack
+                                                          })}/>
                                         </View>
                                     </View>
                             }
@@ -200,7 +204,11 @@ export default function MyCoursesTemplate({navigation}) {
                                         <View style={{alignSelf: "flex-end"}}>
                                             <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
                                                           size={25}
-                                                          color={colors.backgroundCommonDark}/>
+                                                          color={colors.backgroundCommonDark}
+                                                          onPress={() => navigation.navigate("GoToCourse", {
+                                                              address: courseDetails.addressSeminary,
+                                                              sessionFromBack: sessionFromBack
+                                                          })}/>
                                         </View>
                                     </View>
                             }
