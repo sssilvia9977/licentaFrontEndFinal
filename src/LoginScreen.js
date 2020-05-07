@@ -21,16 +21,6 @@ const LoginScreen = ({navigation}) => {
         <KeyboardAvoidingView  behavior="height" enabled style={styles.container}>
             <View style={styles.logInContainer}>
 
-                <Text
-                    onPress={()=>navigation.openDrawer()}
-                    style={styles.title}>Welcome to StudLife</Text>
-
-                <Button
-                    title="Go to Maps"
-                    onPress={() => navigation.navigate('AccessMap')
-                    }
-                />
-
                 <LoginScreenForm navigation={navigation}/>
 
             </View>

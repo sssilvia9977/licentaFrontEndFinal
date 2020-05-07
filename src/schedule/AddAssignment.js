@@ -21,7 +21,7 @@ export default function ({courseName, sessionFromBack, navigation, hideOverlay, 
     TODo:vezi ca nu iti arata valoarea aleasa in drop down
      */
 
-    const [datePicker, setDatePicker] = useState("01-04-2020");
+    const [datePicker, setDatePicker] = useState(new Date());
     const [courseChoise, setCourseChoise] = useState([{value: "banana"}]);
     const [assigTitle, setAssigTitle] = useState("");
     const [assigDesc, setAssigDesc] = useState("");

@@ -31,8 +31,23 @@ export default function TaskSchedule(props) {
                     <Text style={commonStyle.actualSmallText}>{props.classRoom}</Text>
                     <Text style={commonStyle.actualSmallText}>{props.address}</Text>
                 </View>
-
             </TouchableOpacity>
+
+            <View style={{alignSelf: "flex-end"}}>
+                <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
+                              size={25}
+                              color={colors.backgroundCommonDark}
+                              onPress={() => props.navigation.navigate("GoToCourse", {
+                                  address: props.address,
+                                  sessionFromBack: props.sessionFromBack,
+                                  hourStart: props.hourStart,
+                                  classRoom: props.classRoom,
+                                  timestamp: props.timestamp
+                              })}/>
+            </View>
+
+
+
         </View>
     );
 }
@@ -47,6 +62,10 @@ const styles = StyleSheet.create({
 
     }
 });
+
+
+
+
 
 
 

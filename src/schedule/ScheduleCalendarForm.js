@@ -11,11 +11,8 @@ import {useState} from "react";
 import {useEffect} from "react";
 import axios from "axios";
 
-export default function ({navigation, sendScheduleDate, sendScheduleDay, sessionFromBack, sendScheduleMonth, sendScheduleYear}) {
+export default function ({navigation, sendScheduleDate, sendScheduleDay, sessionFromBack, sendScheduleMonth, sendScheduleYear, sendTimeStamp}) {
 
-    const laboratory = {key: 'laboratory', color: 'red', selectedDotColor: 'blue'};
-    const lecture = {key: 'lecture', color: 'blue', selectedDotColor: 'blue'};
-    const seminary = {key: 'seminary', color: 'green'};
 
     const [initialMarkedDates, setInitialMarkedDates] = useState({});
     const [markedDates, setMarkedDates] = useState({});
@@ -52,14 +49,10 @@ export default function ({navigation, sendScheduleDate, sendScheduleDay, session
                         }
                     }
                 };
-
             }
-
-
         });
         setMarkedDates(calendarPeriod);
         setInitialMarkedDates(calendarPeriod);
-
     }
 
     useEffect(() => {
@@ -68,7 +61,6 @@ export default function ({navigation, sendScheduleDate, sendScheduleDay, session
                 sessionId: sessionFromBack,
             });
             structInCalendar(responseStructura);
-
         })();
     }, [navigation]);
 
@@ -79,6 +71,7 @@ export default function ({navigation, sendScheduleDate, sendScheduleDay, session
         sendScheduleDate(new Date(day.dateString).getDate());
         sendScheduleMonth(new Date(day.dateString).getMonth());
         sendScheduleYear(new Date(day.dateString).getFullYear());
+        sendTimeStamp(day.timestamp);
 
         let year = new Date(day.dateString).getFullYear();
         let month = new Date(day.dateString).getMonth() + 1;
@@ -112,7 +105,7 @@ export default function ({navigation, sendScheduleDate, sendScheduleDay, session
                               firstDay={1}
                     // Callback which gets executed when visible months change in scroll view. Default = undefined
                               onVisibleMonthsChange={(months) => {
-                                  console.log('now these months are visible', months);
+                                 // console.log('now these months are visible', months);
                               }}
                               pastScrollRange={22}
                               futureScrollRange={12}
@@ -121,7 +114,8 @@ export default function ({navigation, sendScheduleDate, sendScheduleDay, session
                     // Enable or disable vertical scroll indicator. Default = false
                               showScrollIndicator={false}
                               onDayPress={(day) => {
-                                  sendDayAndDate(day)
+                                  sendDayAndDate(day);
+                                //  console.log(day);
                               }}
                     // Enable horizontal scrolling, default = false
                               horizontal={true}

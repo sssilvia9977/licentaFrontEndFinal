@@ -28,6 +28,7 @@ export default function Schedule({navigation}) {
     const [scheduleMonth, setScheduleMont] = useState(new Date().getMonth());
     const [scheduleYear, setScheduleYear] = useState(new Date().getFullYear());
     const [scheduleDay, setScheduleDay] = useState(new Date().getDay());   // 0 e duminica
+    const [timestamp, setTimestamp] = useState(Date.now());
 
     const [allowUse, setAllowUse] = useState(false);
 
@@ -39,7 +40,7 @@ export default function Schedule({navigation}) {
 
     const [assigs, setAssigs] = useState([]);
     const [assigsFiltered, setAssigsFiltered] = useState([]);
-    const [structInCalendar, setStructInCalendar] = useState();
+    const [structInCalendar, setStructInCalendar] = useState([]);
 
 
     function splitDate(a) {
@@ -66,29 +67,36 @@ export default function Schedule({navigation}) {
         return (scheduleYear + "-" + checkDate(scheduleMonth + 1) + "-" + checkDate(scheduleDate)).localeCompare(splitDate(item.dateLine))
     }
 
-    function afisareOrarInZiDeScoala(anSelected, lunaSelected, ziSelected) {
 
+    function afisareOrarInZiDeScoala(anSelected, lunaSelected, ziSelected) {
         let lunaSelectedBuna = lunaSelected + 1;
         let dataSelected = anSelected + "-" + checkDate(lunaSelectedBuna) + "-" + checkDate(ziSelected);
 
         let continueFor = true;
         let display = false;
 
+
         structInCalendar.forEach(str => {
-            if(continueFor ===  true){
+            if (continueFor === true) {
                 let start = str.periodStart.split("T")[0];
                 let end = str.periodEnd.split("T")[0];
                 let type = str.schoolPeriodType;
 
-                if( type === "SCHOOL" ){
+                if (type === "SCHOOL") {
                     let compareStart = start.localeCompare(dataSelected);    // vreau sa fie egale deci 0  SAU ordine start si apoi dateSelected deci -1 ca start inainte
                     let compareEnd = end.localeCompare(dataSelected);        // vreau sa fie egale deci 0  SAU ordine dateSelected si apoi end deci 1 ca end la final
 
-                    if(compareEnd === 0 || compareStart === 0)          {   continueFor = false;  display = true;}
-                    else if( compareStart === -1 && compareEnd === 1 )  {   continueFor= false; display = true;}
+                    if (compareEnd === 0 || compareStart === 0) {
+                        continueFor = false;
+                        display = true;
+                    } else if (compareStart === -1 && compareEnd === 1) {
+                        continueFor = false;
+                        display = true;
+                    }
                 }
             }
         });
+
         return display;
     }
 
@@ -100,17 +108,16 @@ export default function Schedule({navigation}) {
 
 
     useEffect(() => {
-
         (async () => {
-
             const responseAssig = await axios.post("http://192.168.43.239:8080/getAllAssigs", {
                 sessionId: sessionFromBack,
             });
-            setAssigs(responseAssig.data);
-            setAssigsFiltered(ordonareDupaDate(responseAssig.data.filter((item) => (scheduleYear + "-" +
-                checkDate(scheduleMonth + 1) + "-" + checkDate(scheduleDate)).localeCompare(splitDate(item.dateLine)) === -1)));
+            if(responseAssig.data.length !== 0){
+                setAssigs(responseAssig.data);
+                setAssigsFiltered(ordonareDupaDate(responseAssig.data.filter((item) => (scheduleYear + "-" +
+                    checkDate(scheduleMonth + 1) + "-" + checkDate(scheduleDate)).localeCompare(splitDate(item.dateLine)) === -1)));
+            }
             setAllowUse(true);
-
 //---------------------------------------------------------------------------------------------------------
             const responseOrar = await axios.post("http://192.168.43.239:8080/getSchedule", {
                 sessionId: sessionFromBack
@@ -160,7 +167,7 @@ export default function Schedule({navigation}) {
 
             <ScheduleForm style={styles.calendar} navigation={navigation} sendScheduleDay={setScheduleDay}
                           sendScheduleDate={setScheduleDate} sendScheduleMonth={setScheduleMont}
-                          sendScheduleYear={setScheduleYear}
+                          sendScheduleYear={setScheduleYear} sendTimeStamp={setTimestamp}
                           sessionFromBack={sessionFromBack}/>
 
             <ScrollView>
@@ -182,71 +189,76 @@ export default function Schedule({navigation}) {
 
                     {onFocusPickAssig === false ?
                         //arata orar numai pe timp de scoala
-                        ( scheduleDay === 1 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
+                        (scheduleDay === 1 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
                                 oraLuni.map((ora, index) =>
                                     <TaskSchedule courseAbreviere={ora.courseAbreviere}
-                                                  courseName = {ora.courseName}
+                                                  courseName={ora.courseName}
                                                   courseType={ora.courseType}
                                                   hourStart={ora.hourStart} hourEnd={ora.hourEnd}
                                                   classRoom={ora.courseClassRoom}
                                                   address={ora.courseAddress}
                                                   detailsAddress={ora.courseAddressDetails}
-                                                  sessionFromBack = {sessionFromBack}
-                                                  navigation = {navigation}
+                                                  sessionFromBack={sessionFromBack}
+                                                  navigation={navigation}
+                                                  timestamp={timestamp}
                                                   key={index}/>)
                                 :
-                                (scheduleDay === 2  && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
+                                (scheduleDay === 2 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
                                         oraMarti.map((ora, index) =>
                                             <TaskSchedule courseAbreviere={ora.courseAbreviere}
-                                                          courseName = {ora.courseName}
+                                                          courseName={ora.courseName}
                                                           courseType={ora.courseType}
                                                           hourStart={ora.hourStart} hourEnd={ora.hourEnd}
                                                           classRoom={ora.courseClassRoom}
                                                           address={ora.courseAddress}
                                                           detailsAddress={ora.courseAddressDetails}
-                                                          sessionFromBack = {sessionFromBack}
-                                                          navigation = {navigation}
+                                                          sessionFromBack={sessionFromBack}
+                                                          navigation={navigation}
+                                                          timestamp={timestamp}
                                                           key={index}/>)
                                         :
                                         (scheduleDay === 3 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
                                                 oraMiercuri.map((ora, index) =>
                                                     <TaskSchedule courseAbreviere={ora.courseAbreviere}
-                                                                  courseName = {ora.courseName}
+                                                                  courseName={ora.courseName}
                                                                   courseType={ora.courseType}
                                                                   hourStart={ora.hourStart} hourEnd={ora.hourEnd}
                                                                   classRoom={ora.courseClassRoom}
                                                                   address={ora.courseAddress}
                                                                   detailsAddress={ora.courseAddressDetails}
-                                                                  sessionFromBack = {sessionFromBack}
-                                                                  navigation = {navigation}
+                                                                  sessionFromBack={sessionFromBack}
+                                                                  navigation={navigation}
+                                                                  timestamp={timestamp}
                                                                   key={index}/>)
                                                 :
-                                                (scheduleDay === 4  && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate)?
+                                                (scheduleDay === 4 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
                                                         oraJoi.map((ora, index) =>
                                                             <TaskSchedule courseAbreviere={ora.courseAbreviere}
-                                                                          courseName = {ora.courseName}
+                                                                          courseName={ora.courseName}
                                                                           courseType={ora.courseType}
                                                                           hourStart={ora.hourStart}
                                                                           hourEnd={ora.hourEnd}
                                                                           classRoom={ora.courseClassRoom}
                                                                           address={ora.courseAddress}
                                                                           detailsAddress={ora.courseAddressDetails}
-                                                                          sessionFromBack = {sessionFromBack}
-                                                                          navigation = {navigation}
+                                                                          sessionFromBack={sessionFromBack}
+                                                                          navigation={navigation}
+                                                                          timestamp={timestamp}
                                                                           key={index}/>)
                                                         :
-                                                        (scheduleDay === 5  && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
+                                                        (scheduleDay === 5 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
                                                                 oraVineri.map((ora, index) =>
                                                                     <TaskSchedule courseAbreviere={ora.courseAbreviere}
-                                                                                  courseName = {ora.courseName}
+                                                                                  courseName={ora.courseName}
                                                                                   courseType={ora.courseType}
                                                                                   hourStart={ora.hourStart}
                                                                                   hourEnd={ora.hourEnd}
                                                                                   classRoom={ora.courseClassRoom}
                                                                                   address={ora.courseAddress}
                                                                                   detailsAddress={ora.courseAddressDetails}
-                                                                                  sessionFromBack = {sessionFromBack}
-                                                                                  navigation = {navigation}
+                                                                                  sessionFromBack={sessionFromBack}
+                                                                                  navigation={navigation}
+                                                                                  timestamp={timestamp}
                                                                                   key={index}/>)
                                                                 :
                                                                 <View></View>

@@ -28,6 +28,7 @@ export default function App() {
 
 
 const AppDrawerNavigator = createDrawerNavigator({
+  GoToCourse: {screen: GoToCourse},
   Login: {screen : LoginScreen},
   Schedule: {screen: Schedule},
   AccessMap: {screen: AccessMap},
@@ -40,6 +41,13 @@ const AppDrawerNavigator = createDrawerNavigator({
 
 const AppNavigator = createStackNavigator({
 
+  GoToCourse: {
+    screen: GoToCourse,
+    navigationOptions:{
+      header: null
+    }
+  },
+
   Login: {
     screen: LoginScreen,
     navigationOptions:{
@@ -48,12 +56,6 @@ const AppNavigator = createStackNavigator({
   },
   Menu:{
     screen: Menu,
-    navigationOptions:{
-      header: null
-    }
-  },
-  GoToCourse:{
-    screen: GoToCourse,
     navigationOptions:{
       header: null
     }
