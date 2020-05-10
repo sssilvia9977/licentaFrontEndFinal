@@ -6,31 +6,39 @@ import {useState} from "react";
 
 
 
-export default function GoogleSearch() {
+export default function GoogleSearch({sendDataLeavingLocation, sendDetailsLeavingLocation, sendPressEnterData}) {
 
+    function enterPress(text){
+       // console.log(text.nativeEvent.text);
+        sendPressEnterData(text.nativeEvent.text);
+
+    }
 
     return (
         <GooglePlacesAutocomplete
+            onSubmitEditing={(text) => enterPress(text)}
             showsCancelButtonWhileEditing={true}
             placeholder='Search'
             minLength={2} // minimum length of text to search
             autoFocus={false}
-          //  returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
             keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-            listViewDisplayed='auto'    // true/false/undefined
+            listViewDisplayed='true'    // true/false/undefined  //auto
             fetchDetails={true}
             renderDescription={row => row.description} // custom description render
             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                console.log(data, details);
+            /*    console.log(data);
+                console.log("*********************************");
+                console.log(details);
+                console.log("*********************************");*/
+              sendDataLeavingLocation(data);
+              sendDetailsLeavingLocation(details)
             }}
-
-            getDefaultValue={() => ""  }
 
             query={{
                 // available options: https://developers.google.com/places/web-service/autocomplete
                 key: "AIzaSyCqf1Djekazim8MTvftAXHifffsQ4Q_VYY",
-                language: 'en', // language of the results
-                types: 'address' // default: 'geocode'
+                language: 'ro', // language of the results
+                types: ['geocode', 'address'] // default: 'geocode'
             }}
 
             styles={{
@@ -40,7 +48,7 @@ export default function GoogleSearch() {
                 },
                 textInputContainer: {
                     height: 45,
-                    width: '85%',
+                   // width: '85%',
                     backgroundColor: 'rgb(214, 162, 232)',
                     marginBottom: 20,
                     color: colors.white,
@@ -50,6 +58,7 @@ export default function GoogleSearch() {
                     borderBottomColor: '#FAC748',
                     fontWeight: 'bold',
                     marginLeft: 40,
+                    marginRight: 40
                 },
                 description: {
                     fontWeight: 'bold'
@@ -67,14 +76,15 @@ export default function GoogleSearch() {
                     color: '#1faadb'
                 },
                 listView:{
-                    marginLeft:30,
+                    marginLeft:20,
+                    marginRight: 20,
                     backgroundColor: 'rgb(214, 162, 232)',
-
+                },
+                poweredContainer:{
+                    backgroundColor: 'rgba(214, 162, 232, 0.6)',
                 }
             }}
 
-      //      currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-      //      currentLocationLabel="Current location"
             nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
             GoogleReverseGeocodingQuery={{
                 // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
@@ -84,16 +94,15 @@ export default function GoogleSearch() {
                 rankby: 'distance',
                 type: 'cafe'
             }}
-
             GooglePlacesDetailsQuery={{
                 // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
                 fields: 'formatted_address',
             }}
-
             filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-
             debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-
+            getDefaultValue={() => ""  }
+            //returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+            //   currentLocation={true}
         />
     );
 }

@@ -144,15 +144,6 @@ export default function MyCoursesTemplate({navigation}) {
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.observationLecture}</Text>
                                         </View>
-                                        <View style={{alignSelf: "flex-end"}}>
-                                            <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
-                                                          size={25}
-                                                          color={colors.backgroundCommonDark}
-                                                          onPress={() => navigation.navigate("GoToCourse", {
-                                                              address: courseDetails.addressLecture,
-                                                              sessionFromBack: sessionFromBack
-                                                          })}/>
-                                        </View>
                                     </View>
                             }
 
@@ -173,15 +164,6 @@ export default function MyCoursesTemplate({navigation}) {
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.observationLab}</Text>
                                         </View>
-                                        <View style={{alignSelf: "flex-end"}}>
-                                            <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
-                                                          size={25}
-                                                          color={colors.backgroundCommonDark}
-                                                          onPress={() => navigation.navigate("GoToCourse", {
-                                                              address: courseDetails.addressLab,
-                                                              sessionFromBack: sessionFromBack
-                                                          })}/>
-                                        </View>
                                     </View>
                             }
 
@@ -200,15 +182,6 @@ export default function MyCoursesTemplate({navigation}) {
                                                 style={commonStyle.actualSmallText}>{courseDetails.classRoomSeminary}, {courseDetails.addressSeminary}</Text>
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.observationSeminary}</Text>
-                                        </View>
-                                        <View style={{alignSelf: "flex-end"}}>
-                                            <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
-                                                          size={25}
-                                                          color={colors.backgroundCommonDark}
-                                                          onPress={() => navigation.navigate("GoToCourse", {
-                                                              address: courseDetails.addressSeminary,
-                                                              sessionFromBack: sessionFromBack
-                                                          })}/>
                                         </View>
                                     </View>
                             }

@@ -15,6 +15,7 @@ import MyCourseDetailsTemplate from "./src/MyProfile/MyCourseDetailsTemplate";
 import AddAssignment from "./src/schedule/AddAssignment";
 import Menu from "./src/Menu";
 import GoToCourse from "./myMaps/GoToCourse";
+import Recommendations from "./src/recomandari/Recommendations";
 
 
 
@@ -40,14 +41,12 @@ const AppDrawerNavigator = createDrawerNavigator({
 
 
 const AppNavigator = createStackNavigator({
-
-  GoToCourse: {
-    screen: GoToCourse,
+  Recommendations: {
+    screen: Recommendations,
     navigationOptions:{
       header: null
     }
   },
-
   Login: {
     screen: LoginScreen,
     navigationOptions:{
@@ -91,7 +90,13 @@ const AppNavigator = createStackNavigator({
       header: null
     }
   },
-  AccessMap: AccessMap,
+  GoToCourse: {
+    screen: GoToCourse,
+    navigationOptions:{
+      header: null
+    }
+  },
+
 },{
   headerMode: 'screen'
 });

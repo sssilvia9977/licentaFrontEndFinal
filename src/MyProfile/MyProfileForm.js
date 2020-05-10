@@ -82,6 +82,7 @@ export default function ({sessionFromBack, navigation}) {
          <MyProfileLableText label = "University" value = {university} />
 
           <Button title="Schedule" onPress={()=> {navigation.navigate("Schedule", {sessionFromBack:sessionFromBack});}}/>
+          <Button title="Recommendations" onPress={()=> {navigation.navigate("Recommendations", {sessionFromBack:sessionFromBack});}}/>
 
           <TouchableOpacity>
               <Text
