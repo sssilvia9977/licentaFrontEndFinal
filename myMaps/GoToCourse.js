@@ -119,7 +119,6 @@ export default function ({navigation}) {
         } else if (travelTime.includes("min")) {
             nrMinute = parseInt(travelTimeArray[0]);
         }
-
         return nrZile * 86400000 + nrOre * 3600000 + nrMinute * 60000;
     }
 

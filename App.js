@@ -2,7 +2,6 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 import { StyleSheet, Text, View , Dimensions} from 'react-native';
-import AccessMap from "./myMaps/AccessMap";
 import LoginScreen from "./src/LoginScreen";
 import Schedule from "./src/schedule/Schedule";
 import MyProfile from "./src/MyProfile/MyProfile";
@@ -16,6 +15,10 @@ import AddAssignment from "./src/schedule/AddAssignment";
 import Menu from "./src/Menu";
 import GoToCourse from "./myMaps/GoToCourse";
 import Recommendations from "./src/recomandari/Recommendations";
+import AddRecMaps from "./myMaps/AddRecMaps";
+import AddRecFinalStep from "./src/recomandari/AddRecFinalStep";
+import SeeACategoryOnMaps from "./myMaps/SeeACategoryOnMaps";
+import MyAddedRecommendations from "./src/recomandari/MyAddedRecommendations";
 
 
 
@@ -27,26 +30,8 @@ export default function App() {
 
 }
 
-
-const AppDrawerNavigator = createDrawerNavigator({
-  GoToCourse: {screen: GoToCourse},
-  Login: {screen : LoginScreen},
-  Schedule: {screen: Schedule},
-  AccessMap: {screen: AccessMap},
-  MyProfile: {screen: MyProfile},
-  MyCourses: {screen: MyCourses},
-  MyCourseDetailsTemplate:{screen: MyCourseDetailsTemplate},
-  AddAssignment:{screen: AddAssignment},
-});
-
-
 const AppNavigator = createStackNavigator({
-  Recommendations: {
-    screen: Recommendations,
-    navigationOptions:{
-      header: null
-    }
-  },
+
   Login: {
     screen: LoginScreen,
     navigationOptions:{
@@ -96,6 +81,37 @@ const AppNavigator = createStackNavigator({
       header: null
     }
   },
+  Recommendations: {
+    screen: Recommendations,
+    navigationOptions:{
+      header: null
+    }
+  },
+  AddRecMaps:{
+    screen:AddRecMaps,
+    navigationOptions:{
+      header:null
+    }
+  },
+  AddRecFinalStep:{
+    screen:AddRecFinalStep,
+    navigationOptions:{
+      header:null
+    }
+  },
+  SeeACategoryOnMaps:{
+    screen: SeeACategoryOnMaps,
+    navigationOptions:{
+      header:null
+    }
+  },
+  MyAddedRecommendations:{
+    screen: MyAddedRecommendations,
+    navigationOptions:{
+      header:null
+    }
+  }
+
 
 },{
   headerMode: 'screen'
