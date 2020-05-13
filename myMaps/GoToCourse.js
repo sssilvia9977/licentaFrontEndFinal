@@ -23,6 +23,7 @@ import {FontAwesome5} from "@expo/vector-icons";
 import axios from 'axios';
 import GoogleSearch from "./GoogleSearch";
 import MyCoursesTemplate from "../src/MyProfile/MyCoursesTemplate";
+import CustomMarker from "../components/CustomMarker";
 
 let currentLocationIcon = require("../assets/maps-and-flags.png");
 
@@ -69,6 +70,8 @@ export default function ({navigation}) {
     const [latSelectedLocation, setLatSelectedLocation] = useState(0);
     const [longSelectedLocation, setLongSelectedLocation] = useState(0);
 
+
+
     const [busPolyline, setBusPolyline] = useState([{lineColor: "", coordinates: []}]);
     const [busSteps, setBusSteps] = useState([{
         mode: "",
@@ -76,7 +79,9 @@ export default function ({navigation}) {
         oraPlecareBus: "",
         durataPas: "",
         nrStatii: 0,
-        dest: ""
+        dest: "",
+        destLat:0,
+        destLong:0
     }]);
 
 
@@ -159,12 +164,12 @@ export default function ({navigation}) {
 
     async function getDirections(startLoc, desLoc, wayOfTransport, departureTime) {
         setFirst(false);
+        let resp;
+
         try {
-            let resp;
             if (wayOfTransport === bus) {
                 setShowBusWay(true);
                 resp = await axios.get(`https://maps.googleapis.com/maps/api/directions/json?mode=${wayOfTransport}&origin=${startLoc.latitude},${startLoc.longitude}&destination=${desLoc}&departure_time=${departureTime}&key=${GOOGLE_API_KEY}`);
-                //console.log(departureTime)
             } else {
                 setShowBusWay(false);
                 resp = await axios.get(`https://maps.googleapis.com/maps/api/directions/json?destination=${desLoc}&mode=${wayOfTransport}&key=${GOOGLE_API_KEY}
@@ -184,8 +189,7 @@ export default function ({navigation}) {
 
             if (wayOfTransport === bus) {
                 getDirectionBus(resp.data.routes[0].legs[0]);
-
-            } else {
+            }
                 const points = Polyline.decode(resp.data.routes[0].overview_polyline.points);
                 const coords = points.map(point => {
                     return {
@@ -194,21 +198,20 @@ export default function ({navigation}) {
                     }
                 });
                 setDestPolylineCoords(coords);
-            }
+
 
         } catch (e) {
             console.log('Error', e)
+            console.log(resp)
         }
     }
 
     function getDirectionBus(legs) {
 
         let busStepArray = [];
-        let polyLineArray = [];
-        //vezi ca la mod transit poti sa ziic tuora de plecare din casa
+
         legs.steps.forEach(s => {
             let busStep = {};
-            let polyline = {};
             if (s.travel_mode === "WALKING") {
                 busStep = {
                     mode: "walk",
@@ -216,18 +219,11 @@ export default function ({navigation}) {
                     oraPlecareBus: "",
                     durataPas: s.duration.text,
                     nrStatii: 0,
-                    dest: s.html_instructions
+                    dest: s.html_instructions,
+                    destLat: s.end_location.lat,
+                    destLong: s.end_location.lng,
                 };
 
-                /*  polyline = {
-                      lineColor: "red",
-                      coordinates: s.polyline.points.map(point => {
-                          return {
-                              latitude: point[0],
-                              longitude: point[1]
-                          }
-                      })
-                  }*/
             } else if (s.travel_mode === "TRANSIT") {
                 busStep = {
                     mode: "bus",
@@ -235,35 +231,16 @@ export default function ({navigation}) {
                     oraPlecareBus: s.transit_details.arrival_time.text,
                     durataPas: s.duration.text,
                     nrStatii: s.transit_details.num_stops,
-                    dest: s.transit_details.arrival_stop.name
+                    dest: s.transit_details.arrival_stop.name,
+                    destLat: s.end_location.lat,
+                    destLong: s.end_location.lng,
                 };
-                /*  polyline = {
-                      lineColor: "blue",
-                      coordinates: s.polyline.points.map(point => {
-                          return {
-                              latitude: point[0],
-                              longitude: point[1]
-                          }
-                      })
-                  }*/
             }
-            /* console.log("-------------------------------------------------------------------");
-             console.log("bus steps: ");
-             console.log(busStep);*/
-            //poate asta trebuie cu wrapper
+
             busStepArray[busStepArray.length] = busStep;
-            //  polyLineArray[polyLineArray.length] = polyline;
-            polyLineArray = [...polyLineArray, polyline];
+
         });
 
-      /*  console.log("-------------------------------------------------------------------");
-        console.log("bus steps: ");
-        console.log(busStepArray);*/
-        console.log("-------------------------------------------------------------------");
-        console.log("poli: ");
-        console.log(polyLineArray);
-
-        setBusPolyline(polyLineArray);
         setBusSteps(busStepArray);
 
     }
@@ -273,6 +250,8 @@ export default function ({navigation}) {
         let finalAdd = newAdd.replace(/,/g, "");
         //   console.log("the replaced address: " + finalAdd);
         const resp = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${finalAdd}&key=${GOOGLE_API_KEY}`);
+
+
         const latSelectedLocation = resp.data.results[0].geometry.location.lat;
         const longSelectedLocation = resp.data.results[0].geometry.location.lng;
 
@@ -289,11 +268,11 @@ export default function ({navigation}) {
         );
 
         //oare tre sa chem getDirBus
-        getDirections(
+        await getDirections(
             {latitude: latSelectedLocation, longitude: longSelectedLocation},
             destination,
             wayOfTransport,
-            new Date()
+            timeToLEaveMillis
         );
         setShowSelectedStartLocation(true);
     }
@@ -391,11 +370,20 @@ export default function ({navigation}) {
                             region={region}
                             style={{flex: 1}}
                         >
-
                             <MapView.Polyline strokeWidth={2} strokeColor="red" coordinates={destPolylineCoords}/>
 
-                            <Marker coordinate={{latitude: destCoords.latitude, longitude: destCoords.longitude}}/>
+                            <Marker pinColor={"blue"} coordinate={{latitude: destCoords.latitude, longitude: destCoords.longitude}}/>
                             <Marker coordinate={{latitude: latSelectedLocation, longitude: longSelectedLocation}}/>
+
+                            {
+                                busSteps.filter((step, index) => index !==  busSteps.length-1 ).map((step, index) => (
+                                    <Marker coordinate={{latitude: step.destLat, longitude: step.destLong}}>
+                                        <CustomMarker key={index} number={index+1}/>
+                                    </Marker>
+                                    ))
+                            }
+
+
 
                         </MapView>
 
@@ -483,7 +471,7 @@ export default function ({navigation}) {
 
                                 (
                                     startSearch ?
-                                        <View></View>
+                                        <View/>
                                         :
                                         (
                                             !showBusWay ?
@@ -503,8 +491,7 @@ export default function ({navigation}) {
                                                         padding: 10,
                                                     }}
                                                 >
-                                                    <Text style={commonStyle.labelText}>Course starts at: {hourStart},
-                                                        on {courseStartDate} </Text>
+                                                    <Text style={commonStyle.labelText}>Course starts at: {hourStart}, on {courseStartDate} </Text>
                                                     <Text style={commonStyle.labelText}>{timeToLeave} </Text>
                                                     <Text style={commonStyle.labelText}>Time on road: {duration} </Text>
 
@@ -539,12 +526,9 @@ export default function ({navigation}) {
                                                     {
                                                         showBusFullDetails ?
                                                             <View>
-                                                                <Text style={commonStyle.labelText}>Course starts
-                                                                    at: {hourStart},
-                                                                    on {courseStartDate} </Text>
+                                                                <Text style={commonStyle.labelText}>Course starts at: {hourStart}, on {courseStartDate} </Text>
                                                                 <Text style={commonStyle.labelText}>{timeToLeave} </Text>
-                                                                <Text style={commonStyle.labelText}>Time on
-                                                                    road: {duration} </Text>
+                                                                <Text style={commonStyle.labelText}>Time on road: {duration} </Text>
                                                                 <Text style={commonStyle.labelText}>Go this way: </Text>
                                                                 {
                                                                     busSteps.map((step, index) => (

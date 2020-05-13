@@ -18,10 +18,10 @@ export default function ({placeId}) {
     useEffect(() => {
 
         (async () => {
-            console.log(placeId)
+         //   console.log(placeId)
             const resp = await axios.get(url);
-            if (resp.data.result.website !== undefined) {
-                console.log(resp.data);
+            if (resp.data.result !== undefined && resp.data.result.website !==undefined) {
+              //  console.log(resp.data);
                 setWebsite(resp.data.result.website);
                 setShowButton(true);
             } else {

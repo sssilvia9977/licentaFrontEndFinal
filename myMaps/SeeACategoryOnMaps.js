@@ -18,6 +18,7 @@ export default function ({navigation}) {
     const startPlaceIndex = navigation.getParam("startPlace", 0);
     const categArray = navigation.state.params.categArray;
 
+    const [carouselIndex, setCarouselIndex] = useState(startPlaceIndex);
     const [myPlaceId, setMyPlaceId] = useState("");
     const [placeIdArray, setPlaceIdArray] = useState([]);
     const [placeGeoLoc, setPlaceGeoLoc] = useState([]);
@@ -52,8 +53,7 @@ export default function ({navigation}) {
                 //----------------------------------------
                 const respPlaceId = await axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${finalAdd}&inputtype=textquery&fields=place_id&key=${GOOGLE_API_KEY}`);
                 placeIdArrayInitial = [...placeIdArrayInitial, respPlaceId.data.candidates[0].place_id]
-                /*  console.log("palce id /----------------");
-                  console.log(respPlaceId.data.candidates[0].place_id);*/
+
             }
 
             setRegion(
@@ -66,10 +66,11 @@ export default function ({navigation}) {
 
             setPlaceIdArray(placeIdArrayInitial);
             setPlaceGeoLoc(arrayGeoCoordsObjects);
-            //console.log(arrayGeoCoordsObjects);
+
             setRender(true);
 
             setMyPlaceId(placeIdArrayInitial[startPlaceIndex]);
+
         })();
 
 
@@ -94,14 +95,20 @@ export default function ({navigation}) {
         const longSelectedLocation = resp.data.results[0].geometry.location.lng;
 
         setMyPlaceId(placeIdArray[index]);
+        setCarouselIndex(index);
 
-        this._map.animateToRegion({
+        setRegion({
             latitude: latSelectedLocation,
             longitude: longSelectedLocation,
             latitudeDelta: 0.0170,
             longitudeDelta: 0.00150,
         })
 
+      // this._map.animateCamera({center: {latitude:latSelectedLocation, longitude:longSelectedLocation}}, 1000)
+
+        return(
+            <Marker pinColor={"blue"} coordinate={{latitude: latSelectedLocation, longitude:longSelectedLocation}}/>
+        );
 
     };
 
@@ -118,7 +125,7 @@ export default function ({navigation}) {
             <View style={commonStyle.statusBar}/>
             <View
                 style={styles.containerMaps}>
-                <MapView.Animated
+                <MapView
                     showsUserLocation
                     region={region}
                     style={styles.map}
@@ -126,10 +133,10 @@ export default function ({navigation}) {
                 >
                     {
                         placeGeoLoc.map((place, index) => (
-                            <Marker key={index} coordinate={{latitude: place.lat, longitude: place.long}}/>
+                            <Marker pinColor={index === carouselIndex ? 'blue' : 'red'} key={index === carouselIndex? 'blue' + index : 'red' + index} coordinate={{latitude: place.lat, longitude: place.long}}/>
                         ))
                     }
-                </MapView.Animated>
+                </MapView>
 
                 <Carousel
                     ref={(c) => {this._carousel = c;}}

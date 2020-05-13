@@ -8,6 +8,7 @@ import colors from "../assets/colors";
 import commonStyle from "../assets/style"
 import {useState} from "react";
 import axios from "axios";
+import CustomMarker from "../components/CustomMarker";
 
 
 export default function ({navigation}) {
@@ -41,6 +42,7 @@ export default function ({navigation}) {
 
 
     return (
+
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
