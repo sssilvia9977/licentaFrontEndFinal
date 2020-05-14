@@ -14,6 +14,8 @@ import TaskAssignment from "./TaskAssignment";
 import {Overlay} from "react-native-elements";
 import Menu from "../Menu";
 import {useEffect} from "react";
+import {SCLAlert, SCLAlertButton} from "react-native-scl-alert";
+import {FontAwesome5} from "@expo/vector-icons";
 
 const {width, height} = Dimensions.get('window');
 
@@ -41,6 +43,8 @@ export default function Schedule({navigation}) {
     const [assigs, setAssigs] = useState([]);
     const [assigsFiltered, setAssigsFiltered] = useState([]);
     const [structInCalendar, setStructInCalendar] = useState([]);
+
+    const [alertShow, setAlertShow] = useState(false);
 
 
     function splitDate(a) {
@@ -136,6 +140,8 @@ export default function Schedule({navigation}) {
                 else if (ora.day == "Thursday") setOraJoi(oraJoi => [...oraJoi, ora]);
                 else if (ora.day == "Friday") setOraVineri(oraVineri => [...oraVineri, ora]);
             });
+
+
 //---------------------------------------------------------------------------------------------------------
             const responseStructura = await axios.post("http://192.168.43.239:8080/getStructAnUniv", {
                 sessionId: sessionFromBack,
@@ -151,7 +157,7 @@ export default function Schedule({navigation}) {
             <View style={commonStyle.statusBar}/>
 
             <View style={commonStyle.navigationBar}>
-                <Text onPress={() => setOpenMenu(true)}>Menu</Text>
+                <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10}} onPress={() => setOpenMenu(true)}/>
                 <Overlay isVisible={openMenu}
                          animationType="fade"
                          borderRadius={9}
@@ -164,6 +170,7 @@ export default function Schedule({navigation}) {
                     <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
                 </Overlay>
             </View>
+
 
             <ScheduleForm style={styles.calendar} navigation={navigation} sendScheduleDay={setScheduleDay}
                           sendScheduleDate={setScheduleDate} sendScheduleMonth={setScheduleMont}

@@ -26,5 +26,7 @@ const colors = {
 
     buttonCommon: '#8390FA',
     myPink: "#DB3069",
+    myYellow : '#FAC748' ,
+    myYellowFaded: 'rgba(250,199,72,0.6)',
 
 };export default colors;

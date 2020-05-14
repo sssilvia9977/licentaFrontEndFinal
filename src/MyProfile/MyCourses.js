@@ -9,6 +9,7 @@ import {useState} from "react";
 import axios from "axios";
 import {useEffect} from "react";
 import Menu from "../Menu";
+import {SCLAlert, SCLAlertButton} from "react-native-scl-alert";
 
 /*
 TODO: la avatar, ia de undeva initialel alea
@@ -22,11 +23,17 @@ export default function ({navigation}) {
     const [courses, setCourses] = useState([]);
 
     const [openMenu, setOpenMenu] = useState(false);
+    const [alertShow, setAlertShow] = useState(false);
+
+
 
    useEffect(() =>{
      //  console.log("my courses session id: " + sessionFromBack);
        axios.post("http://192.168.43.239:8080/getCourses", {sessionId:sessionFromBack}).then(response => {
            setCourses(response.data);
+
+           if(response.data.length === 0 ) setAlertShow(true);
+
    });
    },[]);
 
@@ -35,7 +42,7 @@ export default function ({navigation}) {
         <View style={styles.container}>
             <View style={commonStyle.statusBar}/>
             <View style={commonStyle.navigationBar}>
-                <Text onPress={() => setOpenMenu(true)}>Menu</Text>
+                <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10}} onPress={() => setOpenMenu(true)}/>
                 <Overlay isVisible={openMenu}
                          animationType="fade"
                          borderRadius={9}
@@ -48,10 +55,19 @@ export default function ({navigation}) {
                 </Overlay>
             </View>
 
+            <SCLAlert
+                theme="info"
+                show={alertShow}
+                title="Hello,"
+                subtitle="You don't have any courses yet."
+                onRequestClose={() => setAlertShow(false)}>
+                <SCLAlertButton theme="info" onPress={()=> setAlertShow(false)}>OK</SCLAlertButton>
+            </SCLAlert>
+
 
             <ScrollView>
             <View style={ styles.avatarView }>
-                    <Text  style={{ color: colors.backgroundCommonDark, paddingBottom: 10, fontSize: 20, fontWeight: 'bold', fontFamily: "serif",}}>My Courses</Text>
+                    <Text  style={{ color: colors.backgroundCommonDark,paddingTop:20, paddingBottom: 10, fontSize: 25, fontWeight: 'bold', fontFamily: "serif",}}>My Courses</Text>
             </View>
 
                 {

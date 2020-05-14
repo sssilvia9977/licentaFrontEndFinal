@@ -16,6 +16,7 @@ export default function ({navigation, disapear, session}) {
     let recommendationsSelected = require('../assets/recomSelected.png');
 
 
+
     return (
 
         <View style={styles.container}>

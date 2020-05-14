@@ -49,15 +49,20 @@ export default function ({navigation}) {
 
 
     if (!render) {
-        return <ActivityIndicator/>
+        return(
+            <View>
+                <View style={commonStyle.statusBar}/>
+                <ActivityIndicator size="large" color="#0000ff"/>
+            </View>
+        )
     }
     return (
 
-        <View>
+        <View style={styles.container}>
 
             <View style={commonStyle.statusBar}/>
             <View style={commonStyle.navigationBar}>
-                <Text onPress={() => setOpenMenu(true)}>Menu</Text>
+                <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10}} onPress={() => setOpenMenu(true)}/>
                 <Overlay isVisible={openMenu}
                          animationType="fade"
                          borderRadius={9}
@@ -69,7 +74,6 @@ export default function ({navigation}) {
 
                     <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
                 </Overlay>
-
 
                 <Overlay isVisible={openDelete}
                          animationType="fade"
@@ -126,7 +130,7 @@ export default function ({navigation}) {
 const styles = StyleSheet.create({
 
     container: {
-        flex: 1
+        backgroundColor: colors.backgroudCommon
     }
 
 

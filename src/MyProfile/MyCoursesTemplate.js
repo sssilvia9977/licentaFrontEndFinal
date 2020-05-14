@@ -20,6 +20,7 @@ import {useState} from "react";
 import { Divider } from 'react-native-elements';
 import {backgroundColor} from "@eva-design/eva/mapping";
 import MyCourseDetailsTemplate from "./MyCourseDetailsTemplate";
+import {width} from "react-native-scl-alert/src/helpers/dimensions";
 
 
 export default function MyCoursesTemplate(props) {
@@ -42,7 +43,7 @@ export default function MyCoursesTemplate(props) {
 
             <View>
                 <Text style={commonStyle.actualText}>{props.courseAbreviere}</Text>
-                <Text style={commonStyle.actualText}>{props.courseName}</Text>
+                <Text style={[commonStyle.actualText]}>{props.courseName}</Text>
 
             </View>
         </TouchableOpacity>
@@ -54,12 +55,14 @@ export default function MyCoursesTemplate(props) {
 const styles = StyleSheet.create({
     container: {
 
-        paddingLeft: 10,
-        paddingRight: 10,
         flex: 1,
-        flexDirection: "row",
-        paddingBottom: 30,
+        flexDirection: 'row',
+        backgroundColor: colors.myYellowFaded,
+        margin: 10,
+        padding: 10,
+        borderRadius: 20,
+
+
     },
 
 });
-

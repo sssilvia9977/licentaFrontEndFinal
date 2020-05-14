@@ -14,7 +14,7 @@ import CustomMarker from "../components/CustomMarker";
 export default function ({navigation}) {
 
     let sessionFromBack = 0;
-    const [username, setUsername] = useState("a");
+    const [username, setUsername] = useState("Silvia");
     const [password, setPassword] = useState("a");
 
     const [onFocusStyleUsername, setOnFocusStyleUsername] = useState(true);
@@ -26,7 +26,7 @@ export default function ({navigation}) {
         axios.post("http://192.168.43.239:8080/", {username: username, password: password}).then(response => {
                 sessionFromBack = response.data.sessionId;
                 console.log("session:", sessionFromBack);
-                if (sessionFromBack != null ) {
+                if (sessionFromBack !== 0 ) {
                     navigation.navigate('MyProfile', {sessionFromBack: sessionFromBack});
                     setSimulare(false);
                 }

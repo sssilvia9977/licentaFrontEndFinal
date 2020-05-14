@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator} from "react-native";
+import {Button, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView} from "react-native";
 import colors from "../../assets/colors";
 import commonStyle from "../../assets/style";
 import {FontAwesome5} from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import * as Permissions from "expo-permissions";
 import * as DocumentPicker from "expo-document-picker";
 import axios from "axios";
 import {useEffect} from "react";
+import {SCLAlert, SCLAlertButton} from 'react-native-scl-alert'
 
 
 /*
@@ -19,6 +20,7 @@ export default function ({sessionFromBack, navigation}) {
 
     const [render, setRender] = useState(false);
 
+    const [alertShow, setAlertShow] = useState(false);
     const [email, setEmail] = useState("");
     const [faculty, setFaculty] = useState("");
     const [university, setUniversity] = useState("");
@@ -68,22 +70,29 @@ export default function ({sessionFromBack, navigation}) {
             data: formData,
         }).then((res) => {
             console.log(result.name);
+            setAlertShow(true);
         });
 
     }
 
+
+
     if (!render)
         return <ActivityIndicator size="large" color="#0000ff"/>
     return (
-        <View style={styles.container}>
+        <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ justifyContent: 'flex-start',}} style={styles.container}>
 
-            <MyProfileLableText label="Email" value={email}/>
-            <MyProfileLableText label="Change password" value=""/>
-            <MyProfileLableText label="Faculty" value={faculty}/>
-            <MyProfileLableText label="University" value={university}/>
+            <MyProfileLableText sessionFromBack={sessionFromBack} label="Email" value={email}/>
+            <MyProfileLableText sessionFromBack={sessionFromBack} label="Change password" value=""/>
+            <MyProfileLableText sessionFromBack={sessionFromBack} label="University" value={university}/>
+            <MyProfileLableText sessionFromBack={sessionFromBack} label="Faculty" value={faculty}/>
 
-
-            <Button title="MyAddedRecommendations" onPress={() => {navigation.navigate("MyAddedRecommendations", {sessionFromBack: sessionFromBack});}}/>
+            <TouchableOpacity
+                style={commonStyle.commonButton}
+                onPress={() => {navigation.navigate("MyAddedRecommendations", {sessionFromBack: sessionFromBack});}}
+            >
+                <Text style={commonStyle.textButtonCommon}>My added recommendations</Text>
+            </TouchableOpacity>
 
 
             <TouchableOpacity
@@ -93,7 +102,17 @@ export default function ({sessionFromBack, navigation}) {
                 <Text style={commonStyle.textButtonCommon}>Upload schedule file (excel.xlsx)</Text>
             </TouchableOpacity>
 
-        </View>
+
+            <SCLAlert
+                theme="success"
+                show={alertShow}
+                title="Done"
+                subtitle="Your schedule has been uploaded!"
+                onRequestClose={() => setAlertShow(false)}>
+                <SCLAlertButton theme="success" onPress={()=> setAlertShow(false)}>OK</SCLAlertButton>
+            </SCLAlert>
+            
+        </ScrollView>
     );
 }
 
@@ -102,7 +121,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: colors.backgroudCommon,
-        justifyContent: 'flex-start',
         padding: 10,
     },
     eticheta: {

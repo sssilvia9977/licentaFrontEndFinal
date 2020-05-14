@@ -98,7 +98,7 @@ export default function MyCoursesTemplate({navigation}) {
         <View>
             <View style={commonStyle.statusBar}/>
             <View style={commonStyle.navigationBar}>
-                <Text onPress={() => setOpenMenu(true)}>Menu</Text>
+                <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10}} onPress={() => setOpenMenu(true)}/>
                 <Overlay isVisible={openMenu}
                          animationType="fade"
                          borderRadius={9}
@@ -138,7 +138,7 @@ export default function MyCoursesTemplate({navigation}) {
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.professorLecture}</Text>
                                             <Text
-                                                style={commonStyle.actualSmallText}>{courseDetails.professorLectureEmail}</Text>
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorLectureEmail === "Not announced" ? "Email not announced" : courseDetails.professorLectureEmail}</Text>
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.classRoomLecture}, {courseDetails.addressLecture}</Text>
                                             <Text
@@ -158,7 +158,7 @@ export default function MyCoursesTemplate({navigation}) {
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.professorLab}</Text>
                                             <Text
-                                                style={commonStyle.actualSmallText}>{courseDetails.professorLabEmail}</Text>
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorLabEmail === "Not announced" ? "Email not announced" : courseDetails.professorLabEmail}</Text>
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.classRoomLab}, {courseDetails.addressLab}</Text>
                                             <Text
@@ -177,7 +177,7 @@ export default function MyCoursesTemplate({navigation}) {
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.professorSeminary}</Text>
                                             <Text
-                                                style={commonStyle.actualSmallText}>{courseDetails.professorSeminaryEmail}</Text>
+                                                style={commonStyle.actualSmallText}>{courseDetails.professorSeminaryEmail === "Not announced" ? "Email not announced" : courseDetails.professorSeminaryEmail}</Text>
                                             <Text
                                                 style={commonStyle.actualSmallText}>{courseDetails.classRoomSeminary}, {courseDetails.addressSeminary}</Text>
                                             <Text
