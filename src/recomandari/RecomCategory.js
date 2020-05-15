@@ -4,9 +4,13 @@ import CardView from "./CardView";
 import * as React from "react";
 import {useEffect} from "react";
 import colors from "../../assets/colors";
+import {useState} from "react";
 
 
 export default function ({categArray, navigation}) {
+
+
+
 
 
     return (

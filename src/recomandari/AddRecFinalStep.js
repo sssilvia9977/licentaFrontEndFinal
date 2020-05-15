@@ -7,6 +7,7 @@ import {useEffect} from "react";
 import axios from "axios";
 import {useState} from "react";
 import CardView from "./CardView";
+import ActivityIndicator from "react-native-web/src/exports/ActivityIndicator";
 
 
 export default function AddRecFinalStep ({navigation}) {
@@ -17,6 +18,8 @@ export default function AddRecFinalStep ({navigation}) {
 
     const finalAddress = navigation.getParam('finalAddress', '');
     const sessionFromBack = navigation.getParam('sessionFromBack', '0');
+
+    const [cardLoad, setCardLoad] = useState(false);
 
 
     useEffect(() => {
@@ -37,22 +40,16 @@ export default function AddRecFinalStep ({navigation}) {
         navigation.navigate("MyProfile");
    }
 
+
     return (
 
         <View style={styles.container}>
             <View style={commonStyle.statusBar}/>
 
             <View style={{alignSelf:"center"}}>
-                <CardView address={finalAddress} placeName={finalAddress}/>
+                <CardView address={finalAddress} placeName={finalAddress} />
             </View>
 
-            <View style={{marginTop: 30}}>
-                <Input
-                    multiline={true}
-                    label="Add your description"
-                    style={{paddingTop: 30, width: 200,}}
-                    onChangeText={text => setComment(text)}/>
-            </View>
 
             <Dropdown label='Select category' data={data} onChangeText={value => setSelectedCat(value)} />
 
@@ -75,3 +72,14 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+/*
+<View style={{marginTop: 30}}>
+                <Input
+                    multiline={true}
+                    label="Add your description"
+                    style={{paddingTop: 30, width: 200,}}
+                    onChangeText={text => setComment(text)}/>
+            </View>
+ */

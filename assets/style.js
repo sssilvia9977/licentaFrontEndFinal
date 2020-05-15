@@ -83,10 +83,14 @@ module.exports = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
     },
-    actualText: {
+   /* actualText: {
         color: colors.backgroundCommonDark,
         fontSize: 20,
         fontWeight: 'bold',
+    },*/
+    actualText: {
+        fontFamily:"montserrat",
+        fontSize: 20,
     },
     actualSmallText:{
 

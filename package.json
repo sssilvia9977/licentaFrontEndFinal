@@ -45,7 +45,8 @@
     "react-navigation": "^4.0.10",
     "react-navigation-drawer": "^2.4.2",
     "react-navigation-stack": "^1.10.3",
-    "react-redux": "^7.2.0"
+    "react-redux": "^7.2.0",
+    "expo-font": "latest"
   },
   "devDependencies": {
     "babel-preset-expo": "^7.1.0"

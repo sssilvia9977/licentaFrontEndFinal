@@ -1,29 +1,17 @@
-import * as React from "react";
-
-import axios from 'axios';
-import commonStyle from "../../assets/style"
-import {
-    Button,
-    StyleSheet,
-    ScrollView,
-    Text,
-    View,
-    TouchableOpacity,
-    Dimensions,
-    StatusBar,
-    TouchableWithoutFeedback
-} from "react-native";
-import {FontAwesome5} from '@expo/vector-icons';
+import {Image, StyleSheet, ImageBackground, Text, View, TouchableOpacity, TouchableWithoutFeedback} from "react-native";
+import React, {useState} from "react";
 import colors from "../../assets/colors";
-import {useState} from "react";
+import {FontAwesome5} from "@expo/vector-icons";
+import axios from "axios";
 import {Divider, Input, Overlay} from "react-native-elements";
-import AddAssignment from "./AddAssignment";
 import DatePicker from "react-native-datepicker";
+import commonStyle from "../../assets/style";
 
 
-/*
-TODO: this is old
- */
+let assigCard = require("../../assets/AssignmentCard.png");
+let assigIcon = require("../../assets/AssignmentIcon.png");
+let deadLine = require("../../assets/DeadlineIcon.png");
+
 export default function (props) {
 
     //const myColorStatus = props.status;
@@ -73,7 +61,7 @@ export default function (props) {
     }
 
     function deleteAssig() {
-      //  console.log("Id of assig to DELETE: " + props.assigId);
+        //  console.log("Id of assig to DELETE: " + props.assigId);
         setOpenMenu(false);
         props.deleteAssignment(props.assigId);
         axios.post("http://192.168.43.239:8080/deleteAssig", {
@@ -88,8 +76,11 @@ export default function (props) {
         console.log(date);
     }
 
-    return (
-        <View>
+
+
+    return(
+
+        <View style={{alignItems:"center", alignContent:"flex-start"}}>
             <Overlay isVisible={openOverlayFromSchedule ? openMenu : false}
                      borderRadius={9}
                      height={heightOver}
@@ -171,49 +162,61 @@ export default function (props) {
 
 
             <TouchableWithoutFeedback onLongPress={() => {setOpenMenu(true); }}>
+                <ImageBackground source={assigCard} style={{width:325, height: 145}}>
 
-                <View style={styles.container}>
-                    <FontAwesome5 style={{width: "13%", paddingLeft: 6, paddingTop: 5}} name="thumbtack" size={20}
-                                  color={colors.backgroundCommonDark}/>
+                    <View style={{marginTop: 22, marginLeft:35, flexDirection:"row", justifyContent:"space-between"}}>
+                        <View style={{flexDirection:"column"}}>
+                            <View style={{flexDirection: "row"}}>
+                                <Image source={assigIcon} style={styles.littleIcon}/>
+                                <Text style={styles.textStyle}>{props.courseAbreviere}</Text>
+                            </View>
 
-                    <View>
-                        <Text style={commonStyle.actualText}>{props.courseAbreviere}</Text>
-                        <Text style={commonStyle.actualSmallText}>{props.deadline}</Text>
-                        {
-                            props.taskName == null ?
-                                <Text style={commonStyle.actualSmallText}>{props.description}</Text> :
-                                <View>
-                                    <Text style={commonStyle.actualSmallText}>{props.taskName}</Text>
-                                    <Text style={commonStyle.actualSmallText}>{props.description}</Text>
-                                </View>
-                        }
+                            <View style={{flexDirection: "row"}}>
+                                <Image source={deadLine} style={styles.littleIcon}/>
+                                <Text style={styles.textStyle}>{props.deadline}</Text>
+                            </View>
+
+                            {
+                                props.taskName == null ?
+                                    <Text style={styles.textStyle}>{props.description}</Text> :
+                                    <View>
+                                        <Text style={commonStyle.actualSmallText}>{props.taskName}</Text>
+                                        <Text style={styles.textStyle}>{props.description}</Text>
+                                    </View>
+                            }
+
+                        </View>
+
+
+                            <FontAwesome5 style={{width: "13%", paddingLeft: 6, paddingTop: 5, marginRight:10, marginTop: 10}} name="check-circle" size={25}
+                                          color={myColor === false ? colors.gray : colors.green}
+                                          onPress={() => changeAssigStatus()}/>
                     </View>
+                </ImageBackground>
 
-                    <View style={{flex: 1, flexDirection: "row-reverse"}}>
-                        <FontAwesome5 style={{paddingLeft: 10, paddingRight: 9, paddingTop: 5}} name="check-circle"
-                                      size={30}
-                                      onPress={() => changeAssigStatus()}
-                                      color={myColor === false ? colors.gray : colors.green}
-                        />
-                    </View>
-
-                </View>
             </TouchableWithoutFeedback>
+
+
         </View>
 
+
     );
+
 }
 
+
 const styles = StyleSheet.create({
-    container: {
-        paddingTop: 20,
-        paddingLeft: 10,
-        paddingRight: 10,
-        flex: 1,
-        flexDirection: "row",
+    textStyle: {
+        fontFamily: "montserrat",
+        color: colors.myPink,
+        fontSize: 13,
+        marginTop: 9,
+        marginLeft: 8
+    },
+    littleIcon: {
+        width: 27,
+        height: 27,
+        marginLeft: 6,
+    },
 
-    }
-});
-
-
-
+})

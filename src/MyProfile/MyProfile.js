@@ -16,6 +16,10 @@ TODO: la avatar, ia de undeva initialel alea
 TODO: daca apesi pe imagine, poti schimba imaginea
  */
 
+
+/*
+TODO: this is old
+ */
 export default function ({navigation}) {
 
     const [render, setRender] = useState(false);

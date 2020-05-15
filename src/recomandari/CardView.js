@@ -22,19 +22,25 @@ import {Overlay} from "react-native-elements";
 export default function ({address, image, comment, placeName}) {
 //tre sa pun in props si imaginea din maps luata cumva
 
-    const [imageReference, setImageReference] = useState('https://anthropocenemagazine.org/wp-content/uploads/2020/04/Panda-2.jpg');
+    const [imageReference, setImageReference] = useState();
     const [showPlaceName, setShowPlaceName] = useState(placeName);
 
     const GOOGLE_API = 'AIzaSyCqf1Djekazim8MTvftAXHifffsQ4Q_VYY';
 
 
-    async function getCardGoogleDetails() {
+    const [render, setRender] = useState(false);
 
+
+    async function getCardGoogleDetails() {
         const resp = await axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${address}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=${GOOGLE_API}`);
         if(resp.data.candidates[0].photos !== undefined){
             let photoRef = resp.data.candidates[0].photos[0].photo_reference;
             setImageReference(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoRef}&key=${GOOGLE_API}`);
+        }else {
+            setImageReference('https://anthropocenemagazine.org/wp-content/uploads/2020/04/Panda-2.jpg')
         }
+
+        setRender(true);
     }
 
     useEffect(()=>{
@@ -46,6 +52,11 @@ export default function ({address, image, comment, placeName}) {
         }
 
     }, []);
+
+
+    if(!render){
+        <ActivityIndicator/>
+    }
 
     return (
 

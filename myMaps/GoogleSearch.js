@@ -38,7 +38,8 @@ export default function GoogleSearch({sendDataLeavingLocation, sendDetailsLeavin
                 // available options: https://developers.google.com/places/web-service/autocomplete
                 key: "AIzaSyCqf1Djekazim8MTvftAXHifffsQ4Q_VYY",
                 language: 'ro', // language of the results
-                types: ['geocode', 'address'] // default: 'geocode'
+                types: ['geocode', 'address'], // default: 'geocode'
+                components: 'country:ro'
             }}
 
             styles={{

@@ -13,7 +13,7 @@ import {SCLAlert, SCLAlertButton} from 'react-native-scl-alert'
 
 
 /*
-TODO: cred ca acea componeneta o pot tot pasa cu alte propsuri care sa imi tina label name si value
+TODO: OK,  this is OK!!!!!
  */
 
 export default function ({sessionFromBack, navigation}) {
@@ -24,10 +24,15 @@ export default function ({sessionFromBack, navigation}) {
     const [email, setEmail] = useState("");
     const [faculty, setFaculty] = useState("");
     const [university, setUniversity] = useState("");
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+
 
     useEffect(() => {
         axios.post("http://192.168.43.239:8080/getUsername", {sessionId: sessionFromBack}).then(response => {
             setEmail(response.data.email);
+            setLname(response.data.lastName);
+            setFname(response.data.firstName);
             setFaculty(response.data.facultyName);
             setUniversity(response.data.universityName);
             setRender(true);
@@ -82,6 +87,8 @@ export default function ({sessionFromBack, navigation}) {
     return (
         <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ justifyContent: 'flex-start',}} style={styles.container}>
 
+            <MyProfileLableText sessionFromBack={sessionFromBack} label="First Name" value={fname}/>
+            <MyProfileLableText sessionFromBack={sessionFromBack} label="Last Name" value={lname}/>
             <MyProfileLableText sessionFromBack={sessionFromBack} label="Email" value={email}/>
             <MyProfileLableText sessionFromBack={sessionFromBack} label="Change password" value=""/>
             <MyProfileLableText sessionFromBack={sessionFromBack} label="University" value={university}/>
@@ -120,7 +127,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: colors.backgroudCommon,
         padding: 10,
     },
     eticheta: {

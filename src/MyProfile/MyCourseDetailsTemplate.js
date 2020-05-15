@@ -29,13 +29,11 @@ import {Dropdown} from "react-native-material-dropdown";
 import {useCallback} from "react";
 import Menu from "../Menu";
 
-
+/*
+TODO: this is old
+ */
 export default function MyCoursesTemplate({navigation}) {
 
-
-    /*
-    TODO: afiseasa lecture sau labsau semi numai daca userul are asta la materia lui si verifica daca la classRoom am observatii
-     */
 
     const [render, setRender] = useState(false);
     const sessionFromBack = navigation.getParam('sessionFromBack', '0');

@@ -31,6 +31,7 @@ export default function ({navigation}) {
 
     const [render, setRender] = useState(false);
 
+
     useEffect(() => {
 
         (async () => {
@@ -48,14 +49,6 @@ export default function ({navigation}) {
     }
 
 
-    if (!render) {
-        return(
-            <View>
-                <View style={commonStyle.statusBar}/>
-                <ActivityIndicator size="large" color="#0000ff"/>
-            </View>
-        )
-    }
     return (
 
         <View style={styles.container}>
@@ -105,7 +98,7 @@ export default function ({navigation}) {
                 <Text style={[commonStyle.textButtonCommon, {fontSize: 15}]}>Add a recommendation</Text>
             </TouchableOpacity>
 
-            <ScrollView style={{marginBottom: 150}} contentContainerStyle={{alignItems: "center"}}>
+            <ScrollView contentContainerStyle={{alignItems: "center"}}>
                 {
                     myRec.map((rec, index) => (
                         <TouchableHighlight underlayColor='rgba(86, 19, 41, 0.0)' onLongPress={() => {
@@ -130,6 +123,7 @@ export default function ({navigation}) {
 const styles = StyleSheet.create({
 
     container: {
+        flex: 1,
         backgroundColor: colors.backgroudCommon
     }
 

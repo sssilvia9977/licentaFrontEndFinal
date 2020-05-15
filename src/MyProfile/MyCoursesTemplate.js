@@ -22,12 +22,12 @@ import {backgroundColor} from "@eva-design/eva/mapping";
 import MyCourseDetailsTemplate from "./MyCourseDetailsTemplate";
 import {width} from "react-native-scl-alert/src/helpers/dimensions";
 
-
+/*
+  TODO: OK, this is OOKK!!!
+   */
 export default function MyCoursesTemplate(props) {
 
-    /*
-    TODO: afiseasa lecture sau labsau semi numai daca userul are asta la materia lui si verifica daca la classRoom am observatii
-     */
+
     const sessionFromBack = props.sessionFromBack;
 
 
@@ -36,13 +36,14 @@ export default function MyCoursesTemplate(props) {
 
         <TouchableOpacity
             onPress={()=>   props.navigation.navigate('MyCourseDetailsTemplate', { courseName:props.courseName , sessionFromBack : sessionFromBack})}
+
             style={styles.container}>
-            <FontAwesome5 style={{paddingLeft: 2, paddingTop: 7, paddingRight: 5}}
+            <FontAwesome5 style={{paddingLeft: 2, paddingTop: 3, paddingRight: 5}}
                           name="book-open" size={20}
-                          color={colors.backgroundCommonDark}/>
+                          color={colors.myPink}/>
 
             <View>
-                <Text style={commonStyle.actualText}>{props.courseAbreviere}</Text>
+                <Text style={[commonStyle.actualText, {fontWeight:"bold"}]}>{props.courseAbreviere}</Text>
                 <Text style={[commonStyle.actualText]}>{props.courseName}</Text>
 
             </View>
@@ -57,10 +58,18 @@ const styles = StyleSheet.create({
 
         flex: 1,
         flexDirection: 'row',
-        backgroundColor: colors.myYellowFaded,
         margin: 10,
         padding: 10,
         borderRadius: 20,
+        borderWidth:1,
+        borderColor: 'rgba(125, 125, 125, 0.6)',
+        shadowColor:"#000",
+        shadowOffset:{
+            width: 0, height: 6
+        },
+        shadowRadius: 7.49,
+        shadowOpacity: 0.37,
+        elevation: -4
 
 
     },

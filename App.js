@@ -1,12 +1,12 @@
 import 'react-native-gesture-handler';
 
-import React from 'react';
-import { StyleSheet, Text, View , Dimensions} from 'react-native';
+import React, {useState} from 'react';
+import {ActivityIndicator, StyleSheet, Text, View, Dimensions} from 'react-native';
 import LoginScreen from "./src/LoginScreen";
 import Schedule from "./src/schedule/Schedule";
 import MyProfile from "./src/MyProfile/MyProfile";
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 import colors from './assets/colors'
 import {createDrawerNavigator} from "react-navigation-drawer";
 import MyCourses from "./src/MyProfile/MyCourses";
@@ -19,117 +19,141 @@ import AddRecMaps from "./myMaps/AddRecMaps";
 import AddRecFinalStep from "./src/recomandari/AddRecFinalStep";
 import SeeACategoryOnMaps from "./myMaps/SeeACategoryOnMaps";
 import MyAddedRecommendations from "./src/recomandari/MyAddedRecommendations";
-
+import MyCoursesDetailsDESIGN from "./src/MyProfile/MyCoursesDetailsDESIGN";
+import {useEffect} from "react";
+import * as Font from "expo-font";
+import commonStyle from "./assets/style";
+import MyProfileDESIGN from "./src/MyProfile/MyProfileDESIGN";
 
 
 export default function App() {
 
-  return (
-      <AppContainer/>
-  );
+    const [render, setRender] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            await Font.loadAsync({'montserrat': require('./assets/montserrat.ttf')});
+            setRender(true);
+        })();
+    }, []);
+
+
+    if (!render) {
+        return (
+            <View>
+                <View style={commonStyle.statusBar}/>
+                <ActivityIndicator/>
+            </View>
+        )
+    }
+    return (
+        <AppContainer/>
+    );
 
 }
 
 const AppNavigator = createStackNavigator({
 
-  Login: {
-    screen: LoginScreen,
-    navigationOptions:{
-      header: null
-    }
-  },
-  Menu:{
-    screen: Menu,
-    navigationOptions:{
-      header: null
-    }
-  },
-  AddAssignment:{
-    screen: AddAssignment ,
-    navigationOptions:{
-      header: null
-    }
-  },
-  MyCourseDetailsTemplate: {
-    screen: MyCourseDetailsTemplate,
-    navigationOptions:{
-      header: null
-    }
-  },
-  MyCourses: {
-    screen: MyCourses,
-    navigationOptions:{
-      header: null
-    }
-  },
-  MyProfile:{
-    screen: MyProfile,
-    navigationOptions:{
-      header: null
-    }
-  },
+    Login: {
+        screen: LoginScreen,
+        navigationOptions: {
+            header: null
+        }
+    },
+    Menu: {
+        screen: Menu,
+        navigationOptions: {
+            header: null
+        }
+    },
+    MyCourseDetailsTemplate: {
+        //screen: MyCourseDetailsTemplate,
+        screen: MyCoursesDetailsDESIGN,
+        navigationOptions: {
+            header: null
+        }
+    },
+    AddAssignment: {
+        screen: AddAssignment,
+        navigationOptions: {
+            header: null
+        }
+    },
 
-  Schedule: {
-    screen: Schedule,
-    navigationOptions: {
-      header: null
+    MyCourses: {
+        screen: MyCourses,
+        navigationOptions: {
+            header: null
+        }
+    },
+    MyProfile: {
+        screen: MyProfileDESIGN,
+        navigationOptions: {
+            header: null
+        }
+    },
+
+    Schedule: {
+        screen: Schedule,
+        navigationOptions: {
+            header: null
+        }
+    },
+    GoToCourse: {
+        screen: GoToCourse,
+        navigationOptions: {
+            header: null
+        }
+    },
+    Recommendations: {
+        screen: Recommendations,
+        navigationOptions: {
+            header: null
+        }
+    },
+    AddRecMaps: {
+        screen: AddRecMaps,
+        navigationOptions: {
+            header: null
+        }
+    },
+    AddRecFinalStep: {
+        screen: AddRecFinalStep,
+        navigationOptions: {
+            header: null
+        }
+    },
+    SeeACategoryOnMaps: {
+        screen: SeeACategoryOnMaps,
+        navigationOptions: {
+            header: null
+        }
+    },
+    MyAddedRecommendations: {
+        screen: MyAddedRecommendations,
+        navigationOptions: {
+            header: null
+        }
     }
-  },
-  GoToCourse: {
-    screen: GoToCourse,
-    navigationOptions:{
-      header: null
-    }
-  },
-  Recommendations: {
-    screen: Recommendations,
-    navigationOptions:{
-      header: null
-    }
-  },
-  AddRecMaps:{
-    screen:AddRecMaps,
-    navigationOptions:{
-      header:null
-    }
-  },
-  AddRecFinalStep:{
-    screen:AddRecFinalStep,
-    navigationOptions:{
-      header:null
-    }
-  },
-  SeeACategoryOnMaps:{
-    screen: SeeACategoryOnMaps,
-    navigationOptions:{
-      header:null
-    }
-  },
-  MyAddedRecommendations:{
-    screen: MyAddedRecommendations,
-    navigationOptions:{
-      header:null
-    }
-  }
 
 
-},{
-  headerMode: 'screen'
+}, {
+    headerMode: 'screen'
 });
 
 const AppContainer = createAppContainer(AppNavigator);
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerStyle:{
-    backgroundColor: colors.backgroudCommon,
-    height:40,
-  }
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    headerStyle: {
+        backgroundColor: colors.backgroudCommon,
+        height: 40,
+    }
 
 });

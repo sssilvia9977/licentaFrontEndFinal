@@ -1,5 +1,5 @@
 import * as React from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {ImageBackground, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import colors from "../../assets/colors";
 import commonStyle from "../../assets/style";
 import {FontAwesome5} from '@expo/vector-icons';
@@ -8,6 +8,12 @@ import {useState} from "react";
 import axios from "axios";
 
 
+let assigCard = require("../../assets/AssignmentCard.png");
+
+
+/*
+TODO: OK!!!! this is ok
+ */
 export default function (props) {
 
     const [textInput, setTextInput] = useState("");
@@ -17,7 +23,11 @@ export default function (props) {
     const [openChangeField, setOpenChangeField] = useState(false);
     const myLabel = props.label === "Email" ? "New email" : (
         props.label === "Change password" ? "New password" : (
-            props.label === "University" ? "University" : "Faculty"
+            props.label === "University" ? "University" : (
+                props.label === "Faculty" ? "Faculty" : (
+                    props.label === "First Name" ? "First Name" : "Last Name"
+                )
+            )
         )
     );
 
@@ -47,6 +57,18 @@ export default function (props) {
                 resp = await axios.post("http://192.168.43.239:8080/updateUser", {
                     sessionId: props.sessionFromBack,
                     uni: textInput
+                });
+                ok(resp.data);
+            } else if (myLabel === "First Name") {
+                resp = await axios.post("http://192.168.43.239:8080/updateUser", {
+                    sessionId: props.sessionFromBack,
+                    fname: textInput
+                });
+                ok(resp.data);
+            }else if (myLabel === "Last Name") {
+                resp = await axios.post("http://192.168.43.239:8080/updateUser", {
+                    sessionId: props.sessionFromBack,
+                    lname: textInput
                 });
                 ok(resp.data);
             } else if (myLabel === "Faculty") {
@@ -81,6 +103,8 @@ export default function (props) {
     return (
 
         <View style={styles.container}>
+
+
             <View style={{width: '90%'}}>
                 <Text style={styles.labelText}>{props.label}</Text>
                 <Text style={styles.actualText}>{value}</Text>
@@ -88,7 +112,7 @@ export default function (props) {
 
             <View>
                 <FontAwesome5 onPress={() => setOpenChangeField(true)} style={{paddingTop: 10}} name="edit" size={24}
-                              color={colors.backgroundCommonDark}/>
+                              color={colors.myPink}/>
 
                 <Overlay isVisible={openChangeField}
                          animationType="fade"
@@ -114,17 +138,19 @@ export default function (props) {
 
                         <TouchableOpacity
                             style={[commonStyle.commonButton, {bottom: 0, marginTop: 30}]}
-                            onPress={() => {updateUserData();}}
+                            onPress={() => {
+                                updateUserData();
+                            }}
                         >
                             <Text style={commonStyle.textButtonCommon}>Update</Text>
                         </TouchableOpacity>
                     </View>
-
                 </Overlay>
 
             </View>
-        </View>
 
+
+        </View>
     );
 }
 
@@ -132,10 +158,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'row',
-        backgroundColor: colors.myYellowFaded,
         margin: 15,
         padding: 10,
         borderRadius: 20,
+        borderWidth:1,
+        borderColor: 'rgba(125, 125, 125, 0.6)',
+        shadowColor:"#000",
+        shadowOffset:{
+            width: 0, height: -6
+        },
+        shadowRadius: 7.49,
+        shadowOpacity: 0.37,
+        elevation: 0
+
     },
     labelText: {
         color: colors.backgroundCommonDark,

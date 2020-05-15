@@ -72,7 +72,7 @@ export default function Schedule({navigation}) {
     }
 
 
-    function afisareOrarInZiDeScoala(anSelected, lunaSelected, ziSelected) {
+    function afisareOrarInZiDeScoala(anSelected, lunaSelected, ziSelected, perioada) {
         let lunaSelectedBuna = lunaSelected + 1;
         let dataSelected = anSelected + "-" + checkDate(lunaSelectedBuna) + "-" + checkDate(ziSelected);
 
@@ -86,7 +86,7 @@ export default function Schedule({navigation}) {
                 let end = str.periodEnd.split("T")[0];
                 let type = str.schoolPeriodType;
 
-                if (type === "SCHOOL") {
+                if (type === perioada) {
                     let compareStart = start.localeCompare(dataSelected);    // vreau sa fie egale deci 0  SAU ordine start si apoi dateSelected deci -1 ca start inainte
                     let compareEnd = end.localeCompare(dataSelected);        // vreau sa fie egale deci 0  SAU ordine dateSelected si apoi end deci 1 ca end la final
 
@@ -103,6 +103,8 @@ export default function Schedule({navigation}) {
 
         return display;
     }
+
+
 
     useEffect(() => {
         if (allowUse) {
@@ -196,7 +198,7 @@ export default function Schedule({navigation}) {
 
                     {onFocusPickAssig === false ?
                         //arata orar numai pe timp de scoala
-                        (scheduleDay === 1 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
+                        (scheduleDay === 1 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
                                 oraLuni.map((ora, index) =>
                                     <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                   courseName={ora.courseName}
@@ -210,7 +212,7 @@ export default function Schedule({navigation}) {
                                                   timestamp={timestamp}
                                                   key={index}/>)
                                 :
-                                (scheduleDay === 2 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
+                                (scheduleDay === 2 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
                                         oraMarti.map((ora, index) =>
                                             <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                           courseName={ora.courseName}
@@ -224,7 +226,7 @@ export default function Schedule({navigation}) {
                                                           timestamp={timestamp}
                                                           key={index}/>)
                                         :
-                                        (scheduleDay === 3 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
+                                        (scheduleDay === 3 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
                                                 oraMiercuri.map((ora, index) =>
                                                     <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                                   courseName={ora.courseName}
@@ -238,7 +240,7 @@ export default function Schedule({navigation}) {
                                                                   timestamp={timestamp}
                                                                   key={index}/>)
                                                 :
-                                                (scheduleDay === 4 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
+                                                (scheduleDay === 4 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate,"SCHOOL") ?
                                                         oraJoi.map((ora, index) =>
                                                             <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                                           courseName={ora.courseName}
@@ -253,7 +255,7 @@ export default function Schedule({navigation}) {
                                                                           timestamp={timestamp}
                                                                           key={index}/>)
                                                         :
-                                                        (scheduleDay === 5 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate) ?
+                                                        (scheduleDay === 5 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
                                                                 oraVineri.map((ora, index) =>
                                                                     <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                                                   courseName={ora.courseName}
@@ -268,7 +270,12 @@ export default function Schedule({navigation}) {
                                                                                   timestamp={timestamp}
                                                                                   key={index}/>)
                                                                 :
-                                                                <View></View>
+                                                                (afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "HOLIDAY") ?
+                                                                        <View><Text style={[styles.textStyleOnFocus, {color: colors.myPink}]}>Holiday</Text></View>
+                                                                        :
+                                                                        <View></View>
+                                                                )
+
                                                         )
                                                 )
                                         )
