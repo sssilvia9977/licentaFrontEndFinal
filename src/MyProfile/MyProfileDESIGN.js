@@ -75,10 +75,9 @@ export default function ({navigation}) {
                         <Overlay isVisible={openMenu}
                                  animationType="fade"
                                  borderRadius={9}
-                                 height={370}
+                                 height={340}
                                  containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
-                                 windowBackgroundColor="rgba(214, 162, 232, .9)"
-                                 overlayBackgroundColor={colors.backgroudCommon}
+                                 windowBackgroundColor={colors.backgroundCommonDark}
                                  onBackdropPress={() => setOpenMenu(false)}>
 
                             <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>

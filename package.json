@@ -13,10 +13,11 @@
     "@react-native-community/masked-view": "^0.1.7",
     "@react-navigation/drawer": "^5.1.1",
     "@react-navigation/material-top-tabs": "^5.1.1",
-    "@react-navigation/native": "^5.1.5",
+    "@react-navigation/native": "^5.4.0",
+    "@react-navigation/stack": "^5.3.7",
     "@ui-kitten/components": "^4.4.1",
     "axios": "^0.19.2",
-    "expo": "^35.0.0",
+    "expo": "^35.0.1",
     "expo-document-picker": "~7.0.0",
     "expo-location": "~7.0.0",
     "metro-core": "^0.58.0",
@@ -42,11 +43,11 @@
     "react-native-tab-view": "^2.13.0",
     "react-native-ui-kitten": "^4.4.1",
     "react-native-web": "^0.11.7",
-    "react-navigation": "^4.0.10",
+    "react-navigation": "^4.3.9",
     "react-navigation-drawer": "^2.4.2",
     "react-navigation-stack": "^1.10.3",
     "react-redux": "^7.2.0",
-    "expo-font": "latest"
+    "expo-font": "~7.0.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^7.1.0"

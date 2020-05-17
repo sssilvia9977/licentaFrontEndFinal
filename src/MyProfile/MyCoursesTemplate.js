@@ -19,7 +19,7 @@ import colors from "../../assets/colors";
 import {useState} from "react";
 import { Divider } from 'react-native-elements';
 import {backgroundColor} from "@eva-design/eva/mapping";
-import MyCourseDetailsTemplate from "./MyCourseDetailsTemplate";
+import MyCourseDetailsTemplate from "../../old/MyCourseDetailsTemplate";
 import {width} from "react-native-scl-alert/src/helpers/dimensions";
 
 /*

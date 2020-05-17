@@ -2,7 +2,7 @@ import * as React from "react";
 import {ImageBackground, View, TouchableOpacity, StyleSheet, Text, Dimensions, Image, ScrollView} from "react-native";
 import commonStyle from "../../assets/style";
 import {FontAwesome5} from "@expo/vector-icons";
-import {Overlay} from "react-native-elements";
+import {Input, Overlay} from "react-native-elements";
 import colors from "../../assets/colors";
 import Menu from "../Menu";
 import {useState} from "react";
@@ -11,6 +11,7 @@ import {useEffect} from "react";
 import axios from "axios";
 import AddAssignment from "../schedule/AddAssignment";
 import TaskAssignment from "../schedule/TaskAssignment";
+import DatePicker from "react-native-datepicker";
 
 
 let topPart = require("../../assets/TopPart.png");
@@ -24,6 +25,7 @@ let seminaryOff = require("../../assets/SeminaryOff.png");
 let professor = require("../../assets/Professor.png");
 let location = require("../../assets/Location.png");
 let assigIcon = require("../../assets/Assignments.png");
+let examIcon = require("../../assets/ExamIcon.png");
 
 export default function ({navigation}) {
 
@@ -37,9 +39,13 @@ export default function ({navigation}) {
     const courseNa = JSON.stringify(navigation.getParam('courseName', ""));
     const courseName = courseNa.substring(1, courseNa.length - 1);
     const [overlayVisible, setoverlayVisible] = useState(false);
+    const [overlayExam, setOverlayExam] = useState(false);
 
+    const [datePicker, setDatePicker] = useState(new Date);   //alegere data exam
+    const [disabled, setDisabled] = useState(true);  // buton confiramrte examen
 
     const [assigs, setAssigs] = useState([]);
+    const [exam, setExam] = useState({course:"", date:"no"});
 
 
     function splitDate(a) {
@@ -65,6 +71,20 @@ export default function ({navigation}) {
             setAssigs(ordonareDupaDate(response.data.assigmentDTOS));
             setCourseDetails(response.data);
             setRender(true);
+
+            const responseExam = await axios.post("http://192.168.43.239:8080/getExamForCourse", {
+                sessionId: sessionFromBack,
+                courseName: courseName
+            });
+           if(responseExam.data !== "no"){
+               let myExam = {
+                   course:courseName,
+                   date:responseExam.data.substr(0, 10)
+               };
+               setExam(myExam);
+           }
+
+
         })();
 
     }, [navigation]);
@@ -87,6 +107,24 @@ export default function ({navigation}) {
     }
 
 
+    async function addExam() {
+        let id = 0;
+        (await axios.post("http://192.168.43.239:8080/addExam",
+            {
+                sessionId: sessionFromBack,
+                courseName: courseName,
+                examDate: datePicker,
+                examDetails:"detalii"
+            }));
+        let examm = {
+        course:courseName, date:datePicker
+        };
+        setExam(examm);
+        setOverlayExam(false);
+    }
+
+
+
     return (
         <View style={styles.container}>
             <View style={commonStyle.statusBar}/>
@@ -100,10 +138,9 @@ export default function ({navigation}) {
                         <Overlay isVisible={openMenu}
                                  animationType="fade"
                                  borderRadius={9}
-                                 height={370}
+                                 height={340}
                                  containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
-                                 windowBackgroundColor="rgba(214, 162, 232, .9)"
-                                 overlayBackgroundColor={colors.backgroudCommon}
+                                 windowBackgroundColor={colors.backgroundCommonDark}
                                  onBackdropPress={() => setOpenMenu(false)}>
 
                             <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
@@ -132,7 +169,6 @@ export default function ({navigation}) {
                                       onPress={() => setCategoryOn([false, false, true])}>
                         <Image style={styles.categImageSem} source={categoryOn[2] && seminaryOn || seminaryOff}/>
                     </TouchableOpacity>
-
                 </ImageBackground>
 
 
@@ -156,6 +192,18 @@ export default function ({navigation}) {
                                     <Image source={location} style={styles.littleIcon}/>
                                     <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>{courseDetails.classRoomLecture}, {courseDetails.addressLecture}, {courseDetails.observationLecture} </Text>
                                 </View>
+
+                                {
+                                    exam.date!=="no" ?
+                                        <View style={{flexDirection: "row", marginTop: 15}}>
+                                            <Image source={examIcon} style={styles.littleIconExam}/>
+                                            <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>Exam date: {exam.date}</Text>
+                                        </View>
+                                        :
+                                        <View/>
+                                }
+
+
                             </View>
 
                             :
@@ -195,10 +243,47 @@ export default function ({navigation}) {
 
                     }
 
+                    <View style={styles.addAssigContainer}>
+                    <Text style={[commonStyle.actualText, {marginLeft:20}]}>Exam</Text>
+                    <FontAwesome5 style={{paddingLeft: 10, marginRight: 30}} name="plus"
+                                  size={30}
+                                  color={colors.myPink}
+                                  onPress={() => setOverlayExam(!overlayExam)}
+                    />
+
+                        <Overlay isVisible={overlayExam}
+                                 borderRadius={9}
+                                 height={200}
+                                 containerStyle={{flex: 1, justifyContent: "flex-start"}}
+                                 windowBackgroundColor="rgba(214, 162, 232, .9)"
+                                 overlayBackgroundColor={colors.backgroudCommon}
+                                 onBackdropPress={() => setOverlayExam(false)}>
+
+                            <View>
+                                <Text style={{fontWeight: 'bold', color: "#698a96", paddingTop: 30, fontSize: 15}}> Choose date</Text>
+                                <DatePicker
+                                    style={{width: 200, paddingTop: 9, paddingBottom: 20}} date={datePicker} mode="date"
+                                    placeholder="select date" format="DD-MM-YYYY" minDate="01-09-2018" maxDate="12-06-2029"
+                                    confirmBtnText="Confirm" cancelBtnText="Cancel"
+                                    customStyles={{dateIcon: {position: 'absolute',left: 0, top: 4, marginLeft: 0},
+                                        dateInput: {marginLeft: 36}}}
+                                    onDateChange={(date) => {setDatePicker(date); setDisabled(false)}}
+                                />
+
+                                <TouchableOpacity
+                                    style={[commonStyle.commonButton, { backgroundColor: disabled ? colors.gray : colors.myPink }]}
+                                    onPress={() => addExam()}
+                                    disabled={disabled}
+                                >
+                                    <Text style={commonStyle.textButtonCommon}>Save exam</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        </Overlay>
+                    </View>
 
                     <View style={styles.addAssigContainer}>
                         <Text style={[commonStyle.actualText, {marginLeft:20}]}>Assignments:</Text>
-
                         <FontAwesome5 style={{paddingLeft: 10, marginRight: 30}} name="plus"
                                       size={30}
                                       color={colors.myPink}
@@ -272,7 +357,11 @@ const styles = StyleSheet.create({
         height: 30,
         marginRight: 8,
     },
-
+    littleIconExam:{
+        width: 22,
+        height: 22,
+        marginRight: 17,
+    },
     container: {
         flex: 1,
         alignContent: "center",

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView} from "react-native";
+import {Button, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView, Linking} from "react-native";
 import colors from "../../assets/colors";
 import commonStyle from "../../assets/style";
 import {FontAwesome5} from '@expo/vector-icons';
@@ -16,6 +16,7 @@ import {SCLAlert, SCLAlertButton} from 'react-native-scl-alert'
 TODO: OK,  this is OK!!!!!
  */
 
+let website = "https://docs.google.com/spreadsheets/d/1DJA__upxq7oQChY82zpPzoUcAA1f6cSnBdGbhoEADpE/edit?usp=sharing";
 export default function ({sessionFromBack, navigation}) {
 
     const [render, setRender] = useState(false);
@@ -39,6 +40,10 @@ export default function ({sessionFromBack, navigation}) {
         });
     }, []);
 
+
+    function redirectXcel(){
+        Linking.openURL(website);
+    }
 
     const [permissionResponse, setPermissionResponse] = useState("");
 
@@ -107,6 +112,13 @@ export default function ({sessionFromBack, navigation}) {
                 onPress={() => accessFilesPermission()}
             >
                 <Text style={commonStyle.textButtonCommon}>Upload schedule file (excel.xlsx)</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={commonStyle.commonButton}
+                onPress={() => redirectXcel()}
+            >
+                <Text style={commonStyle.textButtonCommon}>Go to schedule file format</Text>
             </TouchableOpacity>
 
 

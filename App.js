@@ -2,15 +2,12 @@ import 'react-native-gesture-handler';
 
 import React, {useState} from 'react';
 import {ActivityIndicator, StyleSheet, Text, View, Dimensions} from 'react-native';
-import LoginScreen from "./src/LoginScreen";
 import Schedule from "./src/schedule/Schedule";
-import MyProfile from "./src/MyProfile/MyProfile";
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import colors from './assets/colors'
 import {createDrawerNavigator} from "react-navigation-drawer";
 import MyCourses from "./src/MyProfile/MyCourses";
-import MyCourseDetailsTemplate from "./src/MyProfile/MyCourseDetailsTemplate";
 import AddAssignment from "./src/schedule/AddAssignment";
 import Menu from "./src/Menu";
 import GoToCourse from "./myMaps/GoToCourse";
@@ -21,9 +18,12 @@ import SeeACategoryOnMaps from "./myMaps/SeeACategoryOnMaps";
 import MyAddedRecommendations from "./src/recomandari/MyAddedRecommendations";
 import MyCoursesDetailsDESIGN from "./src/MyProfile/MyCoursesDetailsDESIGN";
 import {useEffect} from "react";
-import * as Font from "expo-font";
+import * as Font from 'expo-font';
 import commonStyle from "./assets/style";
 import MyProfileDESIGN from "./src/MyProfile/MyProfileDESIGN";
+import SignUp from "./src/SignUp";
+import LoginDESIGN from "./src/LoginDESIGN";
+import {AppLoading} from "expo";
 
 
 export default function App() {
@@ -34,15 +34,19 @@ export default function App() {
         (async () => {
             await Font.loadAsync({'montserrat': require('./assets/montserrat.ttf')});
             setRender(true);
+            console.log('worked');
+
         })();
+
     }, []);
+
 
 
     if (!render) {
         return (
             <View>
                 <View style={commonStyle.statusBar}/>
-                <ActivityIndicator/>
+                <AppLoading/>
             </View>
         )
     }
@@ -54,8 +58,8 @@ export default function App() {
 
 const AppNavigator = createStackNavigator({
 
-    Login: {
-        screen: LoginScreen,
+    LoginDESIGN: {
+        screen: LoginDESIGN,
         navigationOptions: {
             header: null
         }
@@ -92,7 +96,12 @@ const AppNavigator = createStackNavigator({
             header: null
         }
     },
-
+    SignUp: {
+        screen: SignUp,
+        navigationOptions: {
+            header: null
+        }
+    },
     Schedule: {
         screen: Schedule,
         navigationOptions: {

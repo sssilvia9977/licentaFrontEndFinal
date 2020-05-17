@@ -10,7 +10,9 @@ import {useState} from "react";
 import axios from "axios";
 
 
-
+/*
+TODO: This is ooollldd
+ */
 const LoginScreen = ({navigation}) => {
 
 
@@ -32,7 +34,6 @@ const LoginScreen = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.loginScreenBackgroundColor,
     },
     logInContainer: {
         alignItems: 'center',

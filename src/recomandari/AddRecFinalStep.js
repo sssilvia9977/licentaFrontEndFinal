@@ -8,6 +8,7 @@ import axios from "axios";
 import {useState} from "react";
 import CardView from "./CardView";
 import ActivityIndicator from "react-native-web/src/exports/ActivityIndicator";
+import colors from "../../assets/colors";
 
 
 export default function AddRecFinalStep ({navigation}) {
@@ -20,6 +21,7 @@ export default function AddRecFinalStep ({navigation}) {
     const sessionFromBack = navigation.getParam('sessionFromBack', '0');
 
     const [cardLoad, setCardLoad] = useState(false);
+    const [disable, setDisable] = useState(true);
 
 
     useEffect(() => {
@@ -51,10 +53,11 @@ export default function AddRecFinalStep ({navigation}) {
             </View>
 
 
-            <Dropdown label='Select category' data={data} onChangeText={value => setSelectedCat(value)} />
+            <Dropdown label='Select category' data={data} onChangeText={value => {setSelectedCat(value); setDisable(false)}} />
 
             <TouchableOpacity
-                style={[commonStyle.commonButton, {marginTop: 150}]}
+                disabled={disable}
+                style={[commonStyle.commonButton, {marginTop: 150, backgroundColor : disable ? colors.gray : colors.myPink}]}
                 onPress={() => addRec()}>
                 <Text style={commonStyle.textButtonCommon}>Add recommendation</Text>
             </TouchableOpacity>

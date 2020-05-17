@@ -174,7 +174,7 @@ export default function (props) {
 
                 <View style={styles.container}>
                     <FontAwesome5 style={{width: "13%", paddingLeft: 6, paddingTop: 5}} name="thumbtack" size={20}
-                                  color={colors.backgroundCommonDark}/>
+                                  color={colors.myPink}/>
 
                     <View>
                         <Text style={commonStyle.actualText}>{props.courseAbreviere}</Text>
@@ -206,11 +206,15 @@ export default function (props) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 20,
-        paddingLeft: 10,
-        paddingRight: 10,
+
         flex: 1,
         flexDirection: "row",
+
+
+        margin: 20,
+        borderRadius: 20,
+        borderWidth:1,
+        borderColor: 'rgba(125, 125, 125, 0.6)',
 
     }
 });

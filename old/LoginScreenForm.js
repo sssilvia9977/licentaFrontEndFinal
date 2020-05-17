@@ -11,6 +11,18 @@ import axios from "axios";
 import CustomMarker from "../components/CustomMarker";
 
 
+let bottomSectionImage = require("../assets/BottomSection.png");
+let topSectionImage= require("../assets/TopSectionCrop.png");
+let loginButton = require("../assets/LoginIcon.png");
+let signupButton  = require("../assets/SignUpIcon.png");
+let passwordIcon = require("../assets/Password.png");
+let usernameIcon = require("../assets/Username.png");
+
+
+/*
+TODO: This is ooollldd
+ */
+
 export default function ({navigation}) {
 
     let sessionFromBack = 0;
@@ -38,7 +50,13 @@ export default function ({navigation}) {
        /* if(setSimulare){
             navigation.navigate('MyProfile', {sessionFromBack: sessionFromBack});
         }*/
+     }
+
+
+    function callSignUp(navigation){
+         navigation.navigate('SignUp');
     }
+
 
 
     return (
@@ -46,6 +64,11 @@ export default function ({navigation}) {
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+
+
+
+
+
                 <TextInput
                     placeholder="Username"
                     autoCapitalize='none'
@@ -77,9 +100,12 @@ export default function ({navigation}) {
 
                 <TouchableOpacity
                     style={commonStyle.commonButton}
-                    onPress={() => callLogin(navigation)}>
+                    onPress={() => callSignUp(navigation)}>
                     <Text style={commonStyle.textButtonCommon}>Sign up</Text>
                 </TouchableOpacity>
+
+
+
 
 
             </KeyboardAvoidingView>
@@ -91,7 +117,17 @@ export default function ({navigation}) {
 }
 
 const styles = StyleSheet.create({
+    topPart:{
+        flex: 0.3,
+    },
+    middlePart:{
+        flex:0.5,
+    },
+    bottomPart:{
+        flex:0.2,
+    },
     container: {
+        flex:1,
         padding: 20,
 
     },

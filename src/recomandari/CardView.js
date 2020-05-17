@@ -18,7 +18,9 @@ import axios from "axios";
 import {useEffect} from "react";
 import {Overlay} from "react-native-elements";
 
-
+/*
+TODO: OKK, this is OOOKK,
+ */
 export default function ({address, image, comment, placeName}) {
 //tre sa pun in props si imaginea din maps luata cumva
 
@@ -67,7 +69,7 @@ export default function ({address, image, comment, placeName}) {
                 imageStyle={{borderRadius: 20}}
                 style={{width: "100%", height: "100%", resizeMode: "cover", flexDirection: "column-reverse"}}>
                 <View style={styles.viewOnImage}>
-                    <Text style={[commonStyle.actualText, {marginLeft: 10, marginTop:5}]}>{showPlaceName}</Text>
+                    <Text style={[commonStyle.actualText, { marginLeft: 10, marginTop:5}]}>{showPlaceName}</Text>
                 </View>
             </ImageBackground>
         </View>
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
         height: 600,
     },
     viewOnImage: {
-        backgroundColor: "rgba(172,192,192,0.8)",
+        backgroundColor: "rgba(255,255,255,0.8)",
         width: "100%",
         height: "20%",
         borderRadius: 20,

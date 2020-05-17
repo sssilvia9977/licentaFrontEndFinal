@@ -1,11 +1,22 @@
 import * as React from "react";
 
 import axios from 'axios';
-import {Button, StyleSheet, Text, View, TouchableOpacity, Dimensions, StatusBar, ScrollView} from "react-native";
+import {
+    Button,
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    Dimensions,
+    StatusBar,
+    ScrollView,
+    Image,
+    ImageBackground
+} from "react-native";
 import * as Permissions from "expo-permissions";
 import {useState} from "react";
 import commonStyle from "../../assets/style"
-import LoginScreenForm from "../LoginScreenForm";
+import LoginScreenForm from "../../old/LoginScreenForm";
 import colors from "../../assets/colors";
 import ScheduleForm from "./ScheduleCalendarForm";
 import * as DocumentPicker from 'expo-document-picker';
@@ -16,10 +27,22 @@ import Menu from "../Menu";
 import {useEffect} from "react";
 import {SCLAlert, SCLAlertButton} from "react-native-scl-alert";
 import {FontAwesome5} from "@expo/vector-icons";
+import ExamCard from "./ExamCard";
 
 const {width, height} = Dimensions.get('window');
 
+let categoryContainer = require("../../assets/CategoryColored.png");
+let scheduleOn = require("../../assets/ScheduleOn(1).png");
+let scheduleOff = require("../../assets/ScheduleOff(1).png");
+let assigOn = require("../../assets/AssignmentsOn(1).png");
+let assigOff = require("../../assets/AssignmentsOff(1).png");
+let topPartDoarBara = require("../../assets/topDoarBara.png");
+
+
+
 export default function Schedule({navigation}) {
+
+    const [categoryOn, setCategoryOn] = useState([true, false]);
 
     const sessionFromBack = navigation.getParam('sessionFromBack', '0');
 
@@ -44,7 +67,7 @@ export default function Schedule({navigation}) {
     const [assigsFiltered, setAssigsFiltered] = useState([]);
     const [structInCalendar, setStructInCalendar] = useState([]);
 
-    const [alertShow, setAlertShow] = useState(false);
+    const [exams, setExams] = useState([]);
 
 
     function splitDate(a) {
@@ -104,14 +127,11 @@ export default function Schedule({navigation}) {
         return display;
     }
 
-
-
     useEffect(() => {
         if (allowUse) {
             setAssigsFiltered(ordonareDupaDate(assigs.filter((item) => toDisplayAssig(item) === -1 || toDisplayAssig(item) === 0)))
         }
     }, [scheduleDate]);
-
 
     useEffect(() => {
         (async () => {
@@ -150,6 +170,15 @@ export default function Schedule({navigation}) {
             });
             setStructInCalendar(responseStructura.data);
 
+ //---------------------------------------------------------------------------------------------------------
+            const respExams = await axios.post("http://192.168.43.239:8080/getExam", {
+                sessionId: sessionFromBack,
+            });
+            setExams(respExams.data);
+            console.log(respExams.data);
+
+
+
         })();
     }, [navigation]);
 
@@ -158,62 +187,56 @@ export default function Schedule({navigation}) {
         <View style={styles.container}>
             <View style={commonStyle.statusBar}/>
 
-            <View style={commonStyle.navigationBar}>
-                <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10}} onPress={() => setOpenMenu(true)}/>
-                <Overlay isVisible={openMenu}
-                         animationType="fade"
-                         borderRadius={9}
-                         height={370}
-                         containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
-                         windowBackgroundColor="rgba(214, 162, 232, .9)"
-                         overlayBackgroundColor={colors.backgroudCommon}
-                         onBackdropPress={() => setOpenMenu(false)}>
+                     <ImageBackground source={topPartDoarBara} style={{width:Dimensions.get("screen").width, height:40}}>
+                              <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10, marginTop: 10, color: "white"}} onPress={() => setOpenMenu(true)}/>
+                              <Overlay isVisible={openMenu}
+                                       animationType="fade"
+                                       borderRadius={9}
+                                       height={340}
+                                       containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
+                                       windowBackgroundColor={colors.backgroundCommonDark}
+                                       onBackdropPress={() => setOpenMenu(false)}>
 
-                    <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
-                </Overlay>
-            </View>
-
+                                  <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
+                              </Overlay>
+                    </ImageBackground>
 
             <ScheduleForm style={styles.calendar} navigation={navigation} sendScheduleDay={setScheduleDay}
                           sendScheduleDate={setScheduleDate} sendScheduleMonth={setScheduleMont}
                           sendScheduleYear={setScheduleYear} sendTimeStamp={setTimestamp}
                           sessionFromBack={sessionFromBack}/>
 
-            <ScrollView>
-                <View style={styles.aranjare}>
-                    <View style={styles.viewStyle}>
-                        <TouchableOpacity
-                            onPress={() => setOnFocusPickAssig(false)}>
-                            <Text style={onFocusPickAssig === false ? styles.textStyleOnFocus : styles.textStyleOnBlur}>
-                                Schedule</Text>
-                        </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => setOnFocusPickAssig(true)}>
-                            <Text style={onFocusPickAssig === true ? styles.textStyleOnFocus : styles.textStyleOnBlur}
-                            >Assignments</Text>
-                        </TouchableOpacity>
+            <View style={{flex:0.65, justifyContent:"flex-start"}}>
+                {
+                    afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "EXAM") ?
+                        <ImageBackground source={categoryContainer} style={styles.categoryContainer}>
+                                <Text style={[commonStyle.actualText, {color:"white", fontWeight:"bold", marginBottom:40}]}>EXAM PERIOD</Text>
+                        </ImageBackground>
+                        :
+                        <ImageBackground source={categoryContainer} style={styles.categoryContainer}>
+                            <TouchableOpacity style={{ width: 100, height: 42, position: "relative", bottom: 25, right: 15}}
+                                              onPress={() => {setOnFocusPickAssig(false);setCategoryOn([true, false])}}>
+                                <Image style={styles.categImageSchedule} source={categoryOn[0] && scheduleOn || scheduleOff}/>
+                            </TouchableOpacity>
 
-                    </View>
 
-                    {onFocusPickAssig === false ?
-                        //arata orar numai pe timp de scoala
-                        (scheduleDay === 1 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
-                                oraLuni.map((ora, index) =>
-                                    <TaskSchedule courseAbreviere={ora.courseAbreviere}
-                                                  courseName={ora.courseName}
-                                                  courseType={ora.courseType}
-                                                  hourStart={ora.hourStart} hourEnd={ora.hourEnd}
-                                                  classRoom={ora.courseClassRoom}
-                                                  address={ora.courseAddress}
-                                                  detailsAddress={ora.courseAddressDetails}
-                                                  sessionFromBack={sessionFromBack}
-                                                  navigation={navigation}
-                                                  timestamp={timestamp}
-                                                  key={index}/>)
-                                :
-                                (scheduleDay === 2 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
-                                        oraMarti.map((ora, index) =>
+                            <TouchableOpacity style={{width: 105, height: 40, position: "relative", bottom: 25}}
+                                              onPress={() => {setOnFocusPickAssig(true); setCategoryOn([false, true])}}>
+                                <Image style={styles.categImageAssig} source={categoryOn[1] && assigOn || assigOff}/>
+                            </TouchableOpacity>
+                        </ImageBackground>
+                }
+
+
+            <View style={{marginBottom:-80, marginTop:40}}>
+                    <ScrollView>
+                        <View style={[styles.aranjare]}>
+
+                            {onFocusPickAssig === false ?
+                                //arata orar numai pe timp de scoala
+                                (scheduleDay === 1 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
+                                        oraLuni.map((ora, index) =>
                                             <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                           courseName={ora.courseName}
                                                           courseType={ora.courseType}
@@ -226,8 +249,8 @@ export default function Schedule({navigation}) {
                                                           timestamp={timestamp}
                                                           key={index}/>)
                                         :
-                                        (scheduleDay === 3 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
-                                                oraMiercuri.map((ora, index) =>
+                                        (scheduleDay === 2 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
+                                                oraMarti.map((ora, index) =>
                                                     <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                                   courseName={ora.courseName}
                                                                   courseType={ora.courseType}
@@ -240,13 +263,12 @@ export default function Schedule({navigation}) {
                                                                   timestamp={timestamp}
                                                                   key={index}/>)
                                                 :
-                                                (scheduleDay === 4 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate,"SCHOOL") ?
-                                                        oraJoi.map((ora, index) =>
+                                                (scheduleDay === 3 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
+                                                        oraMiercuri.map((ora, index) =>
                                                             <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                                           courseName={ora.courseName}
                                                                           courseType={ora.courseType}
-                                                                          hourStart={ora.hourStart}
-                                                                          hourEnd={ora.hourEnd}
+                                                                          hourStart={ora.hourStart} hourEnd={ora.hourEnd}
                                                                           classRoom={ora.courseClassRoom}
                                                                           address={ora.courseAddress}
                                                                           detailsAddress={ora.courseAddressDetails}
@@ -255,8 +277,8 @@ export default function Schedule({navigation}) {
                                                                           timestamp={timestamp}
                                                                           key={index}/>)
                                                         :
-                                                        (scheduleDay === 5 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
-                                                                oraVineri.map((ora, index) =>
+                                                        (scheduleDay === 4 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate,"SCHOOL") ?
+                                                                oraJoi.map((ora, index) =>
                                                                     <TaskSchedule courseAbreviere={ora.courseAbreviere}
                                                                                   courseName={ora.courseName}
                                                                                   courseType={ora.courseType}
@@ -270,33 +292,65 @@ export default function Schedule({navigation}) {
                                                                                   timestamp={timestamp}
                                                                                   key={index}/>)
                                                                 :
-                                                                (afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "HOLIDAY") ?
-                                                                        <View><Text style={[styles.textStyleOnFocus, {color: colors.myPink}]}>Holiday</Text></View>
+                                                                (scheduleDay === 5 && afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "SCHOOL") ?
+                                                                        oraVineri.map((ora, index) =>
+                                                                            <TaskSchedule courseAbreviere={ora.courseAbreviere}
+                                                                                          courseName={ora.courseName}
+                                                                                          courseType={ora.courseType}
+                                                                                          hourStart={ora.hourStart}
+                                                                                          hourEnd={ora.hourEnd}
+                                                                                          classRoom={ora.courseClassRoom}
+                                                                                          address={ora.courseAddress}
+                                                                                          detailsAddress={ora.courseAddressDetails}
+                                                                                          sessionFromBack={sessionFromBack}
+                                                                                          navigation={navigation}
+                                                                                          timestamp={timestamp}
+                                                                                          key={index}/>)
                                                                         :
-                                                                        <View></View>
-                                                                )
+                                                                        (afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "HOLIDAY") ?
+                                                                                <View><Text style={[styles.textStyleOnFocus, {color: colors.myPink}]}>Holiday</Text></View>
+                                                                                :
+                                                                                (
+                                                                                    afisareOrarInZiDeScoala(scheduleYear, scheduleMonth, scheduleDate, "EXAM") ?
+                                                                                        (
+                                                                                            exams.map((ex, index) =>(
+                                                                                                <ExamCard courseAbreviere={ex.courseAbreviere} key={index} date={ex.date.substr(0, 10)}/>
+                                                                                            ))
+                                                                                        )
+                                                                                        :
+                                                                                       <View/>
+                                                                                )
 
+
+
+
+                                                                        )
+
+                                                                )
                                                         )
                                                 )
                                         )
                                 )
-                        )
 
-                        :
+                                :
 
-                        assigsFiltered
-                            .map((item, index) => (
-                                <TaskAssignment courseAbreviere={item.courseAbreviere} deadline={item.dateLine}
-                                                status={item.status} assigId={item.id}
-                                                openOverlay="false" description={item.description} taskName={item.title}
-                                                key={index}/>
-                            ))
+                                assigsFiltered
+                                    .map((item, index) => (
+                                        <TaskAssignment courseAbreviere={item.courseAbreviere} deadline={item.dateLine}
+                                                        status={item.status} assigId={item.id}
+                                                        openOverlay="false" description={item.description} taskName={item.title}
+                                                        key={index}/>
+                                    ))
 
 
-                    }
+                            }
 
-                </View>
-            </ScrollView>
+                        </View>
+                    </ScrollView>
+            </View>
+
+
+            </View>
 
         </View>
 
@@ -306,9 +360,33 @@ export default function Schedule({navigation}) {
 
 
 const styles = StyleSheet.create({
+    categImageSchedule: {
+        width: 110,
+        height: 20,
+        position: "relative",
+        right: 5,
+        bottom: -17
+    },
+    categImageAssig: {
+        width: 130,
+        height: 20,
+        position: "relative",
+        right: 5,
+        bottom: -15
+    },
+    categoryContainer: {
+        flexDirection: "row",
+        position: "absolute",
+        bottom: 90,
+        //right:8,
+        width: Dimensions.get("screen").width,
+        height: 130,
+        alignSelf: "center",
+        justifyContent: "center",
+        alignItems: "center"
+    },
     container: {
         flex: 1,
-        backgroundColor: colors.backgroudCommon,
         justifyContent: 'flex-start',
     },
     viewStyle: {
@@ -317,7 +395,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         margin: 10,
         borderBottomColor: colors.loginScreenBackgroundColor,
-
     },
     textStyleOnBlur: {
         color: colors.backgroundCommonDark,
@@ -338,8 +415,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.loginScreenBackgroundColor
     },
     aranjare: {
-        flex: 1,
         flexDirection: 'column',
-        paddingBottom: 20,
     }
 });

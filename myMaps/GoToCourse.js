@@ -70,9 +70,7 @@ export default function ({navigation}) {
     const [latSelectedLocation, setLatSelectedLocation] = useState(0);
     const [longSelectedLocation, setLongSelectedLocation] = useState(0);
 
-
-
-    const [busPolyline, setBusPolyline] = useState([{lineColor: "", coordinates: []}]);
+    const [before9am, setBefore9am] = useState("");
     const [busSteps, setBusSteps] = useState([{
         mode: "",
         busLine: "",
@@ -148,6 +146,14 @@ export default function ({navigation}) {
         if (timeToLeaveMillies < Date.now()) {
             setTimeToLeave("The selected day is in the past");
         } else {
+            //daca ora inainte de ora 9, avertizeaza trafic
+            if(calculateMillisecondsFromMidnightToSpecificHour(courseStartHour) <= calculateMillisecondsFromMidnightToSpecificHour("09:00") &&
+                calculateMillisecondsFromMidnightToSpecificHour(courseStartHour) >= calculateMillisecondsFromMidnightToSpecificHour("07:00")){
+                setBefore9am("Don't forget to take the traffic into consideration.");
+            }else{
+                setBefore9am("");
+            }
+
             let timeToLEaveDateObject = new Date(timeToLeaveMillies - 3 * 3600000);   // ca sa fie in time zone Ro
             setTimeToLEaveMillis((timeToLeaveMillies - 3 * 3600000) / 1000);
             //  console.log(timeToLEaveMillis);
@@ -384,7 +390,6 @@ export default function ({navigation}) {
                             }
 
 
-
                         </MapView>
 
 
@@ -491,11 +496,23 @@ export default function ({navigation}) {
                                                         padding: 10,
                                                     }}
                                                 >
-                                                    <Text style={commonStyle.labelText}>Course starts at: {hourStart}, on {courseStartDate} </Text>
-                                                    <Text style={commonStyle.labelText}>{timeToLeave} </Text>
-                                                    <Text style={commonStyle.labelText}>Time on road: {duration} </Text>
+                                                    <Text style={commonStyle.labelText}>Course starts at:
+                                                        <Text style={{color:"white"}}> {hourStart}</Text>, on
+                                                        <Text style={{color:"white"}}> {courseStartDate}</Text>
+                                                    </Text>
+                                                    <Text style={commonStyle.labelText}>{timeToLeave}</Text>
+                                                    <Text style={commonStyle.labelText}>Time on road:  <Text style={{color:"white"}}>{duration}</Text></Text>
+
+                                                    {
+                                                        wayOfTransport === car ?
+                                                            <Text style={{color:"red"}}> {before9am}</Text>
+                                                            :
+                                                            <View/>
+                                                    }
+
 
                                                 </View>
+
                                                 :
 
                                                 <View
@@ -526,10 +543,16 @@ export default function ({navigation}) {
                                                     {
                                                         showBusFullDetails ?
                                                             <View>
-                                                                <Text style={commonStyle.labelText}>Course starts at: {hourStart}, on {courseStartDate} </Text>
+                                                                <Text style={commonStyle.labelText}>Course starts at:
+                                                                    <Text style={{color:"white"}}> {hourStart}</Text>, on
+                                                                    <Text style={{color:"white"}}> {courseStartDate}</Text>
+                                                                </Text>
                                                                 <Text style={commonStyle.labelText}>{timeToLeave} </Text>
-                                                                <Text style={commonStyle.labelText}>Time on road: {duration} </Text>
-                                                                <Text style={commonStyle.labelText}>Go this way: </Text>
+                                                                <Text style={commonStyle.labelText}>Time on road:<Text style={{color:"white"}}> {duration}</Text></Text>
+
+                                                                <Text style={{color:"red"}}> {before9am}</Text>
+
+                                                                <Text style={[commonStyle.labelText, {color:"white", fontSize:25}]}>Go this way: </Text>
                                                                 {
                                                                     busSteps.map((step, index) => (
                                                                         (
@@ -540,10 +563,13 @@ export default function ({navigation}) {
                                                                                 </View>
                                                                                 :
                                                                                 <View key={index}>
-                                                                                    <Text style={commonStyle.labelText}>* Linia autobuzului: {step.busLine}</Text>
-                                                                                    <Text style={commonStyle.labelText}> Ora de plecare a autobuzului: {step.oraPlecareBus} </Text>
+                                                                                    <Text style={commonStyle.labelText}>* Linia autobuzului:
+                                                                                        <Text style={{color:"white"}}> {step.busLine}</Text></Text>
+                                                                                    <Text style={commonStyle.labelText}> Ora de plecare a autobuzului:
+                                                                                        <Text style={{color:"white"}}> {step.oraPlecareBus}</Text></Text>
                                                                                     <Text style={commonStyle.labelText}> Nr de statii: {step.nrStatii} </Text>
                                                                                     <Text style={commonStyle.labelText}> Pana la statia: {step.dest} </Text>
+
                                                                                 </View>
                                                                         )
 
@@ -554,8 +580,6 @@ export default function ({navigation}) {
                                                             <View></View>
 
                                                     }
-
-
 
                                                 </View>
 

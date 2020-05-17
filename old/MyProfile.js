@@ -1,13 +1,13 @@
 import * as React from "react";
 import {useEffect} from 'react';
 import {StyleSheet, Text, View, ActivityIndicator, ImageBackground, TouchableOpacity} from "react-native";
-import colors from "../../assets/colors";
-import commonStyle from "../../assets/style";
+import colors from "../assets/colors";
+import commonStyle from "../assets/style";
 import {Avatar, Input, Overlay} from "react-native-elements";
-import MyProfileForm from "./MyProfileForm";
+import MyProfileForm from "../src/MyProfile/MyProfileForm";
 import {useState} from "react";
 import axios from "axios";
-import Menu from "../Menu";
+import Menu from "../src/Menu";
 import {FontAwesome5} from '@expo/vector-icons';
 
 
@@ -75,10 +75,10 @@ export default function ({navigation}) {
                 <Overlay isVisible={openMenu}
                          animationType="fade"
                          borderRadius={9}
-                         height={370}
+                         height={340}
                          containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
                          windowBackgroundColor="rgba(214, 162, 232, .9)"
-                         overlayBackgroundColor={colors.backgroudCommon}
+                         overlayBackgroundColor={colors.backgroundCommonDark}
                          onBackdropPress={() => setOpenMenu(false)}>
                     <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
                 </Overlay>

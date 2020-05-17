@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import axios from 'axios';
-import commonStyle from "../../assets/style"
+import commonStyle from "../assets/style"
 import {
     Button,
     StyleSheet,
@@ -21,13 +21,13 @@ import {FontAwesome5} from '@expo/vector-icons';
 import {useState} from "react";
 import {backgroundColor} from "@eva-design/eva/mapping";
 import {Divider, Overlay} from "react-native-elements";
-import colors from "../../assets/colors";
-import TaskAssignment from "../schedule/TaskAssignment";
+import colors from "../assets/colors";
+import TaskAssignment from "../src/schedule/TaskAssignment";
 import {useEffect} from "react";
-import AddAssignment from "../schedule/AddAssignment";
+import AddAssignment from "../src/schedule/AddAssignment";
 import {Dropdown} from "react-native-material-dropdown";
 import {useCallback} from "react";
-import Menu from "../Menu";
+import Menu from "../src/Menu";
 
 /*
 TODO: this is old

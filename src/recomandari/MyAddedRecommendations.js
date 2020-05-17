@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     ScrollView,
-    TouchableHighlight
+    Image,
+    TouchableHighlight, ImageBackground, Dimensions
 } from "react-native";
 import colors from "../../assets/colors";
 import commonStyle from "../../assets/style";
@@ -20,7 +21,12 @@ import Menu from "../Menu";
 import RecForm from "./RecForm";
 import CardView from "./CardView";
 
+let topPart = require("../../assets/TopPart.png");
+let addRecomButton = require("../../assets/AddRecomButton.png");
 
+/*
+TODO: okk, this is ook!!!!
+ */
 export default function ({navigation}) {
 
     const sessionFromBack = navigation.getParam("sessionFromBack", "0");
@@ -44,7 +50,7 @@ export default function ({navigation}) {
 
     async function deleteRec() {
         setOpenDelete(false);
-        await axios.delete("http://192.168.43.239:8080/deleteRec", {data:{recId: indexRecToDelete}});
+        await axios.delete("http://192.168.43.239:8080/deleteRec", {data: {recId: indexRecToDelete}});
         setMyRec(myRec.filter(rec => rec.recId !== indexRecToDelete));
     }
 
@@ -52,66 +58,71 @@ export default function ({navigation}) {
     return (
 
         <View style={styles.container}>
-
             <View style={commonStyle.statusBar}/>
-            <View style={commonStyle.navigationBar}>
-                <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10}} onPress={() => setOpenMenu(true)}/>
-                <Overlay isVisible={openMenu}
-                         animationType="fade"
-                         borderRadius={9}
-                         height={370}
-                         containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
-                         windowBackgroundColor="rgba(214, 162, 232, .9)"
-                         overlayBackgroundColor={colors.backgroudCommon}
-                         onBackdropPress={() => setOpenMenu(false)}>
 
-                    <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
-                </Overlay>
+            <View style={styles.topPart}>
+                <ImageBackground source={topPart} style={styles.topPartBackground}>
 
-                <Overlay isVisible={openDelete}
-                         animationType="fade"
-                         borderRadius={9}
-                         height={70}
-                         containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
-                         windowBackgroundColor="rgba(214, 162, 232, .9)"
-                         overlayBackgroundColor={colors.backgroudCommon}
-                         onBackdropPress={() => setOpenDelete(false)}>
-                    <TouchableOpacity onPress={() => deleteRec()}>
-                        <Text style={{fontSize: 40, fontWeight: "bold", color: "red"}}>Delete</Text>
-                    </TouchableOpacity>
+                    <View style={{position: "relative", bottom: 50, right: 160}}>
+                        <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10, marginTop: 40, color: "white"}}
+                                      onPress={() => setOpenMenu(true)}/>
+                        <Overlay isVisible={openMenu}
+                                 animationType="fade"
+                                 borderRadius={9}
+                                 height={340}
+                                 containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
+                                 windowBackgroundColor={colors.backgroundCommonDark}
+                                 onBackdropPress={() => setOpenMenu(false)}>
 
-                </Overlay>
+                            <Menu navigation={navigation} disapear={setOpenMenu} session={sessionFromBack}/>
+                        </Overlay>
+                    </View>
+
+                    <Text style={styles.textTopPart}>My added recommendations</Text>
+
+                    <Overlay isVisible={openDelete}
+                             animationType="fade"
+                             borderRadius={9}
+                             height={70}
+                             containerStyle={{flex: 1, flexDirection: "row", justifyContent: "flex-start"}}
+                             windowBackgroundColor="rgba(214, 162, 232, .9)"
+                             overlayBackgroundColor={colors.backgroudCommon}
+                             onBackdropPress={() => setOpenDelete(false)}>
+                        <TouchableOpacity onPress={() => deleteRec()}>
+                            <Text style={{fontSize: 35, fontWeight: "bold", color: "red"}}>Delete</Text>
+                        </TouchableOpacity>
+
+                    </Overlay>
+                </ImageBackground>
             </View>
 
 
-            <TouchableOpacity
-                style={[commonStyle.commonButton, {
-                    width: 220,
-                    alignSelf: "center",
-                    marginTop: 10,
-                    flexDirection: "row"
-                }]}
-                onPress={() => navigation.navigate("AddRecMaps", {sessionFromBack: sessionFromBack})}
-            >
-                <FontAwesome5 style={{paddingLeft: 10, paddingRight: 10, color: "white"}}
-                              name="plus" size={25}/>
-                <Text style={[commonStyle.textButtonCommon, {fontSize: 15}]}>Add a recommendation</Text>
-            </TouchableOpacity>
+            <View style={styles.bottomPart}>
 
-            <ScrollView contentContainerStyle={{alignItems: "center"}}>
-                {
-                    myRec.map((rec, index) => (
-                        <TouchableHighlight underlayColor='rgba(86, 19, 41, 0.0)' onLongPress={() => {
-                            setIndexRecToDelete(rec.recId);
-                            setOpenDelete(true)
-                        }} key={index}>
-                            <CardView placeName={rec.placeName} address={rec.address}
-                                      comment={rec.initialComment}/>
-                        </TouchableHighlight>
-                    ))
-                }
-            </ScrollView>
 
+                <TouchableOpacity
+                    style={{alignSelf: "center" }}
+                    onPress={() => navigation.navigate("AddRecMaps", {sessionFromBack: sessionFromBack})}
+                >
+                    <Image style={styles.imageAddRecButton} source={addRecomButton}/>
+                </TouchableOpacity>
+
+
+
+                <ScrollView contentContainerStyle={{alignItems: "center"}}>
+                    {
+                        myRec.map((rec, index) => (
+                            <TouchableHighlight underlayColor='rgba(86, 19, 41, 0.0)' onLongPress={() => {
+                                setIndexRecToDelete(rec.recId);
+                                setOpenDelete(true)
+                            }} key={index}>
+                                <CardView placeName={rec.placeName} address={rec.address}
+                                          comment={rec.initialComment}/>
+                            </TouchableHighlight>
+                        ))
+                    }
+                </ScrollView>
+            </View>
 
         </View>
 
@@ -121,11 +132,38 @@ export default function ({navigation}) {
 
 
 const styles = StyleSheet.create({
-
+    imageAddRecButton:{
+        width: 350,
+        height: 100,
+    },
     container: {
         flex: 1,
-        backgroundColor: colors.backgroudCommon
+    },
+    topPart: {
+        flex: 0.25,
+        justifyContent: "flex-start",
+    },
+    topPartBackground: {
+        width: Dimensions.get("screen").width,
+        height: 200,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    textTopPart: {
+        color: "white",
+        fontSize: 30,
+        textAlign:"center",
+        fontFamily: "montserrat",
+        position:"relative",
+        bottom: 30,
+
+    },
+    bottomPart:{
+        flex: 0.75,
     }
 
 
 });
+
+
+
