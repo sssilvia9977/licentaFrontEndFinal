@@ -50,7 +50,8 @@
     "expo-font": "~7.0.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^7.1.0"
+    "babel-preset-expo": "^7.1.0",
+    "react-native-base64": "0.0.2"
   },
   "private": true
 }

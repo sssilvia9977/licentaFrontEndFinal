@@ -45,14 +45,14 @@ export default function ({navigation}) {
     const [disabled, setDisabled] = useState(true);  // buton confiramrte examen
 
     const [assigs, setAssigs] = useState([]);
-    const [exam, setExam] = useState({course:"", date:"no"});
+    const [exam, setExam] = useState({course: "", date: "no"});
 
 
     function splitDate(a) {
-        return  a.dateLine.substring(6,10) + "-" + a.dateLine.substring(3,5) + "-" + a.dateLine.substring(0,2);
+        return a.dateLine.substring(6, 10) + "-" + a.dateLine.substring(3, 5) + "-" + a.dateLine.substring(0, 2);
     }
 
-    function ordonareDupaDate(assigs){
+    function ordonareDupaDate(assigs) {
         let sortate = assigs.sort(function (a, b) {
             let newA = splitDate(a);
             let newB = splitDate(b);
@@ -76,13 +76,13 @@ export default function ({navigation}) {
                 sessionId: sessionFromBack,
                 courseName: courseName
             });
-           if(responseExam.data !== "no"){
-               let myExam = {
-                   course:courseName,
-                   date:responseExam.data.substr(0, 10)
-               };
-               setExam(myExam);
-           }
+            if (responseExam.data !== "no") {
+                let myExam = {
+                    course: courseName,
+                    date: responseExam.data.substr(0, 10)
+                };
+                setExam(myExam);
+            }
 
 
         })();
@@ -114,15 +114,14 @@ export default function ({navigation}) {
                 sessionId: sessionFromBack,
                 courseName: courseName,
                 examDate: datePicker,
-                examDetails:"detalii"
+                examDetails: "detalii"
             }));
         let examm = {
-        course:courseName, date:datePicker
+            course: courseName, date: datePicker
         };
         setExam(examm);
         setOverlayExam(false);
     }
-
 
 
     return (
@@ -132,7 +131,7 @@ export default function ({navigation}) {
 
                 <ImageBackground source={topPart} style={styles.topPartBackground}>
 
-                    <View style={{alignSelf:"flex-start", marginBottom:40}}>
+                    <View style={{alignSelf: "flex-start", marginBottom: 40}}>
                         <FontAwesome5 name={"bars"} size={24} style={{marginLeft: 10, color: "white"}}
                                       onPress={() => setOpenMenu(true)}/>
                         <Overlay isVisible={openMenu}
@@ -179,63 +178,96 @@ export default function ({navigation}) {
                 <ScrollView>
 
                     {
-                        categoryOn[0] && courseDetails.professorLecture!=="" ?
-                            <View style={{marginBottom:20, marginLeft:55}}>
+                        categoryOn[0] && courseDetails.professorLecture !== "" ?
+                            <View style={{marginBottom: 20, marginLeft: 55}}>
                                 <View style={{flexDirection: "row"}}>
                                     <Image source={professor} style={styles.littleIcon}/>
-                                    <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>{courseDetails.professorLecture},
+                                    <Text style={{
+                                        fontFamily: "montserrat",
+                                        color: colors.myPink,
+                                        fontSize: 13,
+                                        marginTop: 9
+                                    }}>{courseDetails.professorLecture},
                                         {courseDetails.professorLectureEmail === "Not announced" ? "Email not announced" : courseDetails.professorLectureEmail}
                                     </Text>
                                 </View>
 
                                 <View style={{flexDirection: "row", marginTop: 15}}>
                                     <Image source={location} style={styles.littleIcon}/>
-                                    <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>{courseDetails.classRoomLecture}, {courseDetails.addressLecture}, {courseDetails.observationLecture} </Text>
+                                    <Text style={{
+                                        fontFamily: "montserrat",
+                                        color: colors.myPink,
+                                        fontSize: 13,
+                                        marginTop: 9
+                                    }}>{courseDetails.classRoomLecture} {courseDetails.addressLecture} {courseDetails.observationLecture} </Text>
                                 </View>
 
                                 {
-                                    exam.date!=="no" ?
+                                    exam.date !== "no" ?
                                         <View style={{flexDirection: "row", marginTop: 15}}>
                                             <Image source={examIcon} style={styles.littleIconExam}/>
-                                            <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>Exam date: {exam.date}</Text>
+                                            <Text style={{
+                                                fontFamily: "montserrat",
+                                                color: colors.myPink,
+                                                fontSize: 13,
+                                                marginTop: 9
+                                            }}>Exam date: {exam.date}</Text>
                                         </View>
                                         :
                                         <View/>
                                 }
-
-
                             </View>
 
                             :
 
                             (
-                                categoryOn[1] && courseDetails.professorLab!=="" ?
-                                    <View style={{marginBottom:20, marginLeft:55}}>
+                                categoryOn[1] && courseDetails.professorLab !== "" ?
+                                    <View style={{marginBottom: 20, marginLeft: 55}}>
                                         <View style={{flexDirection: "row"}}>
                                             <Image source={professor} style={styles.littleIcon}/>
-                                            <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>{courseDetails.professorLab},
+                                            <Text style={{
+                                                fontFamily: "montserrat",
+                                                color: colors.myPink,
+                                                fontSize: 13,
+                                                marginTop: 9
+                                            }}>{courseDetails.professorLab},
                                                 {courseDetails.professorLabEmail === "Not announced" ? "Email not announced" : courseDetails.professorLabEmail}
                                             </Text>
                                         </View>
 
                                         <View style={{flexDirection: "row", marginTop: 15}}>
                                             <Image source={location} style={styles.littleIcon}/>
-                                            <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>{courseDetails.classRoomLab}, {courseDetails.addressLab}, {courseDetails.observationLab} </Text>
+                                            <Text style={{
+                                                fontFamily: "montserrat",
+                                                color: colors.myPink,
+                                                fontSize: 13,
+                                                marginTop: 9
+                                            }}>{courseDetails.classRoomLab} {courseDetails.addressLab} {courseDetails.observationLab} </Text>
                                         </View>
                                     </View>
                                     :
-                                    courseDetails.professorSeminary!=="" &&
-                                    <View style={{marginBottom:20, marginLeft:55}}>
+                                    courseDetails.professorSeminary !== "" &&
+                                    <View style={{marginBottom: 20, marginLeft: 55}}>
                                         <View style={{flexDirection: "row"}}>
                                             <Image source={professor} style={styles.littleIcon}/>
-                                            <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>{courseDetails.professorSeminary},
+                                            <Text style={{
+                                                fontFamily: "montserrat",
+                                                color: colors.myPink,
+                                                fontSize: 13,
+                                                marginTop: 9
+                                            }}>{courseDetails.professorSeminary},
                                                 {courseDetails.professorSeminaryEmail === "Not announced" ? "Email not announced" : courseDetails.professorSeminaryEmail}
                                             </Text>
                                         </View>
 
                                         <View style={{flexDirection: "row", marginTop: 15}}>
                                             <Image source={location} style={styles.littleIcon}/>
-                                            <Text style={{fontFamily: "montserrat", color: colors.myPink, fontSize: 13, marginTop: 9}}>{courseDetails.classRoomSeminary}, {courseDetails.addressSeminary}, {courseDetails.observationSeminary} </Text>
+                                            <Text style={{
+                                                fontFamily: "montserrat",
+                                                color: colors.myPink,
+                                                fontSize: 13,
+                                                marginTop: 9
+                                            }}>{courseDetails.classRoomSeminary} {courseDetails.addressSeminary} {courseDetails.observationSeminary} </Text>
                                         </View>
                                     </View>
 
@@ -243,47 +275,61 @@ export default function ({navigation}) {
 
                     }
 
-                    <View style={styles.addAssigContainer}>
-                    <Text style={[commonStyle.actualText, {marginLeft:20}]}>Exam</Text>
-                    <FontAwesome5 style={{paddingLeft: 10, marginRight: 30}} name="plus"
-                                  size={30}
-                                  color={colors.myPink}
-                                  onPress={() => setOverlayExam(!overlayExam)}
-                    />
-
-                        <Overlay isVisible={overlayExam}
-                                 borderRadius={9}
-                                 height={200}
-                                 containerStyle={{flex: 1, justifyContent: "flex-start"}}
-                                 windowBackgroundColor="rgba(214, 162, 232, .9)"
-                                 overlayBackgroundColor={colors.backgroudCommon}
-                                 onBackdropPress={() => setOverlayExam(false)}>
-
-                            <View>
-                                <Text style={{fontWeight: 'bold', color: "#698a96", paddingTop: 30, fontSize: 15}}> Choose date</Text>
-                                <DatePicker
-                                    style={{width: 200, paddingTop: 9, paddingBottom: 20}} date={datePicker} mode="date"
-                                    placeholder="select date" format="DD-MM-YYYY" minDate="01-09-2018" maxDate="12-06-2029"
-                                    confirmBtnText="Confirm" cancelBtnText="Cancel"
-                                    customStyles={{dateIcon: {position: 'absolute',left: 0, top: 4, marginLeft: 0},
-                                        dateInput: {marginLeft: 36}}}
-                                    onDateChange={(date) => {setDatePicker(date); setDisabled(false)}}
+                    {
+                        categoryOn[0] ?
+                            <View style={styles.addAssigContainer}>
+                                <Text style={[commonStyle.actualText, {marginLeft: 20}]}>Exam</Text>
+                                <FontAwesome5 style={{paddingLeft: 10, marginRight: 30}} name="plus"
+                                              size={30}
+                                              color={colors.myPink}
+                                              onPress={() => setOverlayExam(!overlayExam)}
                                 />
 
-                                <TouchableOpacity
-                                    style={[commonStyle.commonButton, { backgroundColor: disabled ? colors.gray : colors.myPink }]}
-                                    onPress={() => addExam()}
-                                    disabled={disabled}
-                                >
-                                    <Text style={commonStyle.textButtonCommon}>Save exam</Text>
-                                </TouchableOpacity>
+                                <Overlay isVisible={overlayExam}
+                                         borderRadius={9}
+                                         height={200}
+                                         containerStyle={{flex: 1, justifyContent: "flex-start"}}
+                                         windowBackgroundColor="rgba(214, 162, 232, .9)"
+                                         overlayBackgroundColor={colors.backgroudCommon}
+                                         onBackdropPress={() => setOverlayExam(false)}>
 
+                                    <View>
+                                        <Text
+                                            style={{fontWeight: 'bold', color: "#698a96", paddingTop: 30, fontSize: 15}}> Choose
+                                            date</Text>
+                                        <DatePicker
+                                            style={{width: 200, paddingTop: 9, paddingBottom: 20}} date={datePicker} mode="date"
+                                            placeholder="select date" format="DD-MM-YYYY" minDate="01-09-2018"
+                                            maxDate="12-06-2029"
+                                            confirmBtnText="Confirm" cancelBtnText="Cancel"
+                                            customStyles={{
+                                                dateIcon: {position: 'absolute', left: 0, top: 4, marginLeft: 0},
+                                                dateInput: {marginLeft: 36}
+                                            }}
+                                            onDateChange={(date) => {
+                                                setDatePicker(date);
+                                                setDisabled(false)
+                                            }}
+                                        />
+
+                                        <TouchableOpacity
+                                            style={[commonStyle.commonButton, {backgroundColor: disabled ? colors.gray : colors.myPink}]}
+                                            onPress={() => addExam()}
+                                            disabled={disabled}
+                                        >
+                                            <Text style={commonStyle.textButtonCommon}>Save exam</Text>
+                                        </TouchableOpacity>
+
+                                    </View>
+                                </Overlay>
                             </View>
-                        </Overlay>
-                    </View>
+                            :
+                            <View/>
+                    }
+
 
                     <View style={styles.addAssigContainer}>
-                        <Text style={[commonStyle.actualText, {marginLeft:20}]}>Assignments:</Text>
+                        <Text style={[commonStyle.actualText, {marginLeft: 20}]}>Assignments:</Text>
                         <FontAwesome5 style={{paddingLeft: 10, marginRight: 30}} name="plus"
                                       size={30}
                                       color={colors.myPink}
@@ -322,8 +368,6 @@ export default function ({navigation}) {
                     ))}
 
 
-
-
                 </ScrollView>
 
             </View>
@@ -345,19 +389,19 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         flexDirection: "row",
         justifyContent: "space-between",
-        margin:10,
+        margin: 10,
     },
 
     courseDetails: {
         flex: 0.61,
-      //  margin: 27,
+        //  margin: 27,
     },
     littleIcon: {
         width: 30,
         height: 30,
         marginRight: 8,
     },
-    littleIconExam:{
+    littleIconExam: {
         width: 22,
         height: 22,
         marginRight: 17,

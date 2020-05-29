@@ -33,20 +33,23 @@ export default function TaskSchedule(props) {
                 </View>
             </TouchableOpacity>
 
-            <View style={{alignSelf: "flex-end"}}>
-                <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
-                              size={25}
-                              color={colors.myPink}
-                              onPress={() => props.navigation.navigate("GoToCourse", {
-                                  address: props.address,
-                                  sessionFromBack: props.sessionFromBack,
-                                  hourStart: props.hourStart,
-                                  classRoom: props.classRoom,
-                                  timestamp: props.timestamp
-                              })}/>
-            </View>
-
-
+            {
+                props.address === "" ?
+                    <View/>
+                    :
+                    <View style={{alignSelf: "flex-end"}}>
+                        <FontAwesome5 style={{paddingRight: 10, paddingBottom: 7}} name="route"
+                                      size={25}
+                                      color={colors.myPink}
+                                      onPress={() => props.navigation.navigate("GoToCourse", {
+                                          address: props.address,
+                                          sessionFromBack: props.sessionFromBack,
+                                          hourStart: props.hourStart,
+                                          classRoom: props.classRoom,
+                                          timestamp: props.timestamp
+                                      })}/>
+                    </View>
+            }
 
         </View>
     );

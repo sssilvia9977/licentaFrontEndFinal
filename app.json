@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "frontEnt",
-    "slug": "frontEndVersion",
+
+    "name": "StudApp",
+    "slug": "studapp",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [

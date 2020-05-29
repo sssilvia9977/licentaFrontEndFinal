@@ -8,6 +8,7 @@ import axios from "axios";
 import CustomMarker from "../components/CustomMarker";
 import {useEffect} from "react";
 import * as Font from 'expo-font';
+import {BASE_URL, headers} from "../components/Auth";
 
 let bottomSectionImage = require("../assets/BottomSection.png");
 let topSectionImage = require("../assets/TopSectionCrop.png");
@@ -30,13 +31,16 @@ export default function LoginDESIGN({navigation}) {
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     function callLogin(navigation) {
-        axios.post("http://192.168.43.239:8080/", {username: username, password: password}).then(response => {
+        axios.post(BASE_URL+ "/", {username: username, password: password}, {
+            headers: headers(username, password)
+        }).then(response => {
             sessionFromBack = response.data.sessionId;
+        //    console.log(response.data);
             console.log("session:", sessionFromBack);
             if (sessionFromBack !== 0) {
                 navigation.navigate('MyProfile', {sessionFromBack: sessionFromBack});
             } else {
-                alert("nu")
+                alert("Username or password wrong.")
             }
 
         });
