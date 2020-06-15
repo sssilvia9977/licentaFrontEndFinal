@@ -34,7 +34,7 @@ export default function TaskSchedule(props) {
             </TouchableOpacity>
 
             {
-                props.address === "" ?
+                props.address === "" || props.address === null ?
                     <View/>
                     :
                     <View style={{alignSelf: "flex-end"}}>

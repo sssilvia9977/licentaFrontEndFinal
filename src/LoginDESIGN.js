@@ -30,20 +30,26 @@ export default function LoginDESIGN({navigation}) {
 
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-    function callLogin(navigation) {
-        axios.post(BASE_URL+ "/", {username: username, password: password}, {
+    async function callLogin(navigation) {
+        let wrongUser = true;
+         let response = await axios.post(BASE_URL+ "/", {username: username, password: password}, {
             headers: headers(username, password)
-        }).then(response => {
-            sessionFromBack = response.data.sessionId;
-        //    console.log(response.data);
-            console.log("session:", sessionFromBack);
-            if (sessionFromBack !== 0) {
-                navigation.navigate('MyProfile', {sessionFromBack: sessionFromBack});
-            } else {
-                alert("Username or password wrong.")
-            }
-
         });
+
+         if(response.status === 200) {
+             wrongUser = false;
+             console.log(wrongUser+" nuu")
+             sessionFromBack = response.data.sessionId;
+             //    console.log(response.data);
+             console.log("session:", sessionFromBack);
+             if (sessionFromBack !== 0) {
+                 navigation.navigate('MyProfile', {sessionFromBack: sessionFromBack});
+             } else {
+                 alert("Username or passsdfsdfsdfdsword wrong.")
+             }
+         }
+
+        if(wrongUser)  alert("Username or password wrong.");
     }
 
 
@@ -84,7 +90,7 @@ export default function LoginDESIGN({navigation}) {
                 <View style={styles.topPart}>
                     <ImageBackground source={topSectionImage}
                                      style={{width: Dimensions.get("screen").width, height: 250}}>
-                        <Text style={styles.textTopPart}>Nume aplicatie</Text>
+                        <Text style={styles.textTopPart}>StudentACE</Text>
                     </ImageBackground>
                 </View>
 

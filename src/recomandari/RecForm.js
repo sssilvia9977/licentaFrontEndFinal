@@ -16,13 +16,13 @@ export default function (props) {
 
     const sessionFromBack = props.sessionFromBack;
 
-    let EAT_CHEAP = "Eat like a student";
+    let EAT_CHEAP =    "Eat like a student";
     let COFFEE_STUDY = "Coffee & Study";
-    let COFFEE_TOGO = "Coffee to go";
-    let RESTAURANT = "Your usual day out";
-    let DISCO = "Disco forever";
-    let CONCERT = "Best live places";
-    let SPLURGE = "Top splurge";
+    let COFFEE_TOGO =  "Coffee to go";
+    let RESTAURANT =   "Your usual day out";
+    let DISCO =        "Disco forever";
+    let CONCERT =      "Best live places";
+    let SPLURGE =      "LUX";
 
     const [respByCat, setRespByCat] = useState([[]]);
 

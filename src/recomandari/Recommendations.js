@@ -23,9 +23,6 @@ let topPart = require("../../assets/TopPart.png");
 let addRecomButton = require("../../assets/AddRecomButton.png");
 
 
-/*
-TODO:
- */
 
 export default function ({navigation}) {
 

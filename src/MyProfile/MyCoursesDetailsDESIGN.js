@@ -194,12 +194,15 @@ export default function ({navigation}) {
 
                                 <View style={{flexDirection: "row", marginTop: 15}}>
                                     <Image source={location} style={styles.littleIcon}/>
-                                    <Text style={{
-                                        fontFamily: "montserrat",
-                                        color: colors.myPink,
-                                        fontSize: 13,
-                                        marginTop: 9
-                                    }}>{courseDetails.classRoomLecture} {courseDetails.addressLecture} {courseDetails.observationLecture} </Text>
+                                    <ScrollView horizontal={true}>
+                                        <Text style={{
+                                            fontFamily: "montserrat",
+                                            color: colors.myPink,
+                                            fontSize: 13,
+                                            marginTop: 9
+                                        }}>{courseDetails.classRoomLecture} {courseDetails.addressLecture} {courseDetails.observationLecture} </Text>
+                                    </ScrollView>
+
                                 </View>
 
                                 {
@@ -237,12 +240,15 @@ export default function ({navigation}) {
 
                                         <View style={{flexDirection: "row", marginTop: 15}}>
                                             <Image source={location} style={styles.littleIcon}/>
-                                            <Text style={{
-                                                fontFamily: "montserrat",
-                                                color: colors.myPink,
-                                                fontSize: 13,
-                                                marginTop: 9
-                                            }}>{courseDetails.classRoomLab} {courseDetails.addressLab} {courseDetails.observationLab} </Text>
+                                            <ScrollView horizontal={true}>
+                                                <Text style={{
+                                                    fontFamily: "montserrat",
+                                                    color: colors.myPink,
+                                                    fontSize: 13,
+                                                    marginTop: 9
+                                                }}>{courseDetails.classRoomLab} {courseDetails.addressLab} {courseDetails.observationLab} </Text>
+                                            </ScrollView>
+
                                         </View>
                                     </View>
                                     :
@@ -262,12 +268,15 @@ export default function ({navigation}) {
 
                                         <View style={{flexDirection: "row", marginTop: 15}}>
                                             <Image source={location} style={styles.littleIcon}/>
-                                            <Text style={{
-                                                fontFamily: "montserrat",
-                                                color: colors.myPink,
-                                                fontSize: 13,
-                                                marginTop: 9
-                                            }}>{courseDetails.classRoomSeminary} {courseDetails.addressSeminary} {courseDetails.observationSeminary} </Text>
+                                            <ScrollView horizontal={true}>
+                                                <Text style={{
+                                                    fontFamily: "montserrat",
+                                                    color: colors.myPink,
+                                                    fontSize: 13,
+                                                    marginTop: 9
+                                                }}>{courseDetails.classRoomSeminary} {courseDetails.addressSeminary} {courseDetails.observationSeminary} </Text>
+                                            </ScrollView>
+
                                         </View>
                                     </View>
 
